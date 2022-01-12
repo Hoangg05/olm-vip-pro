@@ -38,8 +38,8 @@ const PartDropDown = styled.ul`
 	transform: translate(0, 100%);
 	display: ${props => (props.isdrop ? "grid" : "none")};
 	place-items: center;
-	grid-template-columns: repeat(2, 50%);
-	min-width: 30vw;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap: 20px;
 	height: fit-content;
 	padding: 20px;
 	border-radius: 4px;
@@ -52,7 +52,7 @@ const PartDropDown = styled.ul`
 	& a {
 		display: inline-block;
 		white-space: nowrap;
-		padding: 10px;
+		padding: 10px 20px;
 		width: 100%;
 		text-align: center;
 		margin: 0;

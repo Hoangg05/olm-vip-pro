@@ -1,50 +1,61 @@
 {
-  "name": "olmvp",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "buffer": "^6.0.3",
-    "crypto-js": "^4.1.1",
-    "firebase": "^9.6.1",
-    "framer-motion": "^5.5.5",
-    "react": "^17.0.2",
-    "react-client-captcha": "^1.0.3",
-    "react-dom": "^17.0.2",
-    "react-icons": "^4.3.1",
-    "react-paginate": "^8.1.0",
-    "react-responsive-carousel": "^3.2.22",
-    "react-router-dom": "^6.2.1",
-    "react-scripts": "5.0.0",
-    "react-select": "^5.2.1",
-    "react-toastify": "^8.1.0",
-    "styled-components": "^5.3.3",
-    "web-vitals": "^2.1.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+	"name": "olmvp",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"@electron/remote": "^2.0.1",
+		"@testing-library/jest-dom": "^5.14.1",
+		"@testing-library/react": "^12.0.0",
+		"@testing-library/user-event": "^13.2.1",
+		"buffer": "^6.0.3",
+		"concurrently": "^7.0.0",
+		"cross-env": "^7.0.3",
+		"crypto-js": "^4.1.1",
+		"electron": "^16.0.7",
+		"firebase": "^9.6.1",
+		"framer-motion": "^5.5.5",
+		"moment": "^2.29.1",
+		"react": "^17.0.2",
+		"react-client-captcha": "^1.0.3",
+		"react-dom": "^17.0.2",
+		"react-icons": "^4.3.1",
+		"react-paginate": "^8.1.0",
+		"react-responsive-carousel": "^3.2.22",
+		"react-router-dom": "^6.2.1",
+		"react-scripts": "5.0.0",
+		"react-select": "^5.2.1",
+		"react-toastify": "^8.1.0",
+		"styled-components": "^5.3.3",
+		"wait-on": "^6.0.0",
+		"web-vitals": "^2.1.0"
+	},
+	"main": "public/main.js",
+	"homepage": "./",
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject",
+		"electron:serve": "concurrently -k \"cross-env BROWSER=none yarn start\" \"yarn electron:start\"",
+		"electron:build": "",
+		"electron:start": "wait-on tcp:3000 && electron ."
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
 }

@@ -42,7 +42,10 @@ const ClassComponent = ({ userEncode, dataUserEncode, Base64, setID }) => {
 	};
 
 	useEffect(() => {
+		let c = false;
+		if (c) return;
 		setID(user.uid);
+		return () => (c = true);
 	});
 
 	return user && data_user

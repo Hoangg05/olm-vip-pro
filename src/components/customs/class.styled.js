@@ -20,12 +20,14 @@ const Column = styled.tr`
 	display: grid;
 	grid-template-columns: repeat(${({ c }) => c || 5}, 1fr);
 	transition: all 1s linear;
-	&:hover {
+	${({ no_hover }) =>
+		!no_hover &&
+		`&:hover {
 		background-color: #2fa2ff;
 		& * {
 			color: #fff;
 		}
-	}
+	}`};
 	&:nth-child(1) th {
 		color: #ffffff;
 		border: none;

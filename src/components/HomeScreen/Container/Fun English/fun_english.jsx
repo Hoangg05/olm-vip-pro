@@ -18,8 +18,8 @@ function FunEnglishComponent(props) {
 				<h4>Fun English !</h4>
 			</a>
 			<List>
-				<Post>
-					<Avatar>
+				<Post hasImageQuestion>
+					<Avatar hasImageQuestion p={20}>
 						<img src={props.photoURL || logo} alt="" />
 					</Avatar>
 					<Question>
@@ -39,7 +39,10 @@ function FunEnglishComponent(props) {
 				</Post>
 				<Post>
 					<Avatar>
-						<img src={props.photoURL || logo} alt="" />
+						<img
+							src={props.photoURL ? props.photoURL : logo}
+							alt=""
+						/>
 					</Avatar>
 					<Question>
 						<Username>Hoàng</Username>

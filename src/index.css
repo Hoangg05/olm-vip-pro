@@ -34,7 +34,7 @@ body {
 	width: 100%;
 	min-height: 100vh;
 	display: block;
-	padding-top: 8vh;
+	padding-top: 10vh;
 	font-weight: bold;
 }
 
@@ -47,7 +47,6 @@ a {
 }
 
 img {
-	user-zoom: none;
 	-webkit-user-drag: none;
 	user-select: none;
 	-moz-user-select: none;
@@ -73,4 +72,11 @@ img {
 
 .style_captchaContainer__LdFYB canvas {
 	width: 100%;
+}
+
+.chi_don_gian_la_animation_element\._\. {
+	width: 100%;
+	height: 100%;
+	display: grid;
+	place-items: center;
 }

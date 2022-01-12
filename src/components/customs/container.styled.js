@@ -61,6 +61,7 @@ const List = styled.ul`
 		border-radius: 0;
 		&-thumb {
 			border-radius: 0;
+			background: #ddd;
 		}
 	}
 	& a {
@@ -69,11 +70,20 @@ const List = styled.ul`
 `;
 
 const Post = styled.li`
+	padding: 0 10px;
 	width: 100%;
 	margin: 10px 0;
 	display: flex;
+	${({ hasImageQuestion }) =>
+		hasImageQuestion
+			? `
+	justify-content: center;
+	align-items: flex-start;
+	`
+			: `
 	justify-content: center;
 	align-items: center;
+	`};
 	transition: all .5s linear;
 	&:hover {
 		box-shadow: 5px 5px 10px #ccc;
@@ -88,6 +98,7 @@ const Avatar = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	${({ hasImageQuestion, p }) => hasImageQuestion && `margin-top: ${p}px`};
 	margin-right: 10px;
 	border-radius: 5px;
 	box-shadow: inset 0 0 10px #ccc;

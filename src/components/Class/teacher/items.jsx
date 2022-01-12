@@ -2,8 +2,11 @@ import { Fragment, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { ChildColumn, Column, Paginate } from "../../customs/class.styled";
 import { doc, onSnapshot } from "firebase/firestore";
+import moment from "moment";
+import "moment/locale/vi";
 
 function PaginatedItems({ itemsPerPage, history, fs, data_user, filter }) {
+	moment.locale("vi");
 	const [currentItems, setCurrentItems] = useState(null);
 	const [pageCount, setPageCount] = useState(0);
 	const [itemOffset, setItemOffset] = useState(0);
@@ -11,11 +14,13 @@ function PaginatedItems({ itemsPerPage, history, fs, data_user, filter }) {
 
 	useEffect(
 		() => {
-			if (items) {
+			let c = false;
+			if (items && !c) {
 				const endOffset = itemOffset + itemsPerPage;
 				setCurrentItems(items.slice(itemOffset, endOffset));
 				setPageCount(Math.ceil(items.length / itemsPerPage));
 			}
+			return () => (c = true);
 		},
 		[itemOffset, itemsPerPage, items]
 	);
@@ -92,6 +97,9 @@ function Item({ data, history, __class }) {
 	return (
 		data &&
 		data.map((item, index) => {
+			const time4mat = time => {
+				return time * 1000;
+			};
 			return (
 				<Column
 					key={index}
@@ -106,12 +114,18 @@ function Item({ data, history, __class }) {
 						{__class}
 					</ChildColumn>
 					<ChildColumn>
-						{item.__date.__start}
+						{moment(
+							time4mat(item.__date.__open.__start.seconds)
+						).fromNow()}
 					</ChildColumn>
 					<ChildColumn>
-						{item.__date.__end
-							? item.__date.__end
-							: "Không giới hạn"}
+						{item.__date.__lock
+							? "Đã hết giờ làm"
+							: item.__date.__open.__end
+								? moment(
+										time4mat(item.__date.__open.__end.seconds)
+									).fromNow()
+								: "Không giới hạn"}
 					</ChildColumn>
 				</Column>
 			);

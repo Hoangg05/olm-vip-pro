@@ -23,6 +23,18 @@ import {
 	getFirestore
 } from "firebase/firestore";
 import MainScreenExam from "./components/Exam/main";
+import { motion, AnimatePresence } from "framer-motion";
+
+const transitionRouter = {
+	in: {
+		opacity: 1,
+		x: 0
+	},
+	out: {
+		opacity: 0,
+		x: "-100%"
+	}
+};
 
 function MainComponent() {
 	const auth = getAuth(app);
@@ -93,92 +105,171 @@ function MainComponent() {
 							enc={enc}
 						/>
 						<BrowserRouter>
-							<Routes>
-								<Route
-									path="/"
-									exact
-									element={<HomeComponent />}
-								/>
-								<Route
-									path="/login"
-									exact
-									element={
-										<LoginComponent
-											Base64={Base64}
-											userEncode={Base64.encrypt(
-												JSON.stringify(user),
-												"hoangyuri"
-											).toString()}
-											auth={auth}
-										/>
-									}
-								/>
-								<Route
-									path="/register"
-									exact
-									element={
-										<RegisterComponent
-											Base64={Base64}
-											userEncode={Base64.encrypt(
-												JSON.stringify(user),
-												"hoangyuri"
-											).toString()}
-										/>
-									}
-								/>
-								<Route
-									path="/profile/:id"
-									exact
-									element={
-										<Fragment>
-											{user
-												? <ProfileComponent
-														Base64={Base64}
-														userEncode={Base64.encrypt(
-															JSON.stringify(
-																user.uid
-															),
-															"hoangyuri"
-														).toString()}
-														dataUserEncode={Base64.encrypt(
-															JSON.stringify(data),
-															"hoangyuri"
-														).toString()}
-														setID={setID}
-													/>
-												: <E404 />}
-										</Fragment>
-									}
-								/>
-								<Route
-									path="/my-class"
-									exact
-									element={
-										<Fragment>
-											{user
-												? <ClassComponent
+							<AnimatePresence>
+								<Routes>
+									<Route
+										path="/"
+										exact
+										element={
+											<Fragment>
+												<motion.div
+													className="chi_don_gian_la_animation_element._."
+													initial="out"
+													animate="in"
+													exit="out"
+													variants={transitionRouter}>
+													<HomeComponent />
+												</motion.div>
+											</Fragment>
+										}
+									/>
+									<Route
+										path="/login"
+										exact
+										element={
+											<Fragment>
+												<motion.div
+													className="chi_don_gian_la_animation_element._."
+													initial="out"
+													animate="in"
+													exit="out"
+													variants={transitionRouter}>
+													<LoginComponent
 														Base64={Base64}
 														userEncode={Base64.encrypt(
 															JSON.stringify(user),
 															"hoangyuri"
 														).toString()}
-														dataUserEncode={Base64.encrypt(
-															JSON.stringify(data),
+														auth={auth}
+													/>
+												</motion.div>
+											</Fragment>
+										}
+									/>
+									<Route
+										path="/register"
+										exact
+										element={
+											<Fragment>
+												<motion.div
+													className="chi_don_gian_la_animation_element._."
+													initial="out"
+													animate="in"
+													exit="out"
+													variants={transitionRouter}>
+													<RegisterComponent
+														Base64={Base64}
+														userEncode={Base64.encrypt(
+															JSON.stringify(user),
 															"hoangyuri"
 														).toString()}
-														setID={setID}
 													/>
-												: <E404 />}
-										</Fragment>
-									}
-								/>
-								<Route
-									path="/exam/*"
-									exact
-									element={user ? <MainScreenExam /> : <E404 />}
-								/>
-								<Route path="/*" element={<E404 />} />
-							</Routes>
+												</motion.div>
+											</Fragment>
+										}
+									/>
+									<Route
+										path="/profile/:id"
+										exact
+										element={
+											<Fragment>
+												<motion.div
+													className="chi_don_gian_la_animation_element._."
+													initial="out"
+													animate="in"
+													exit="out"
+													variants={transitionRouter}>
+													{user
+														? <ProfileComponent
+																Base64={Base64}
+																userEncode={Base64.encrypt(
+																	JSON.stringify(
+																		user.uid
+																	),
+																	"hoangyuri"
+																).toString()}
+																dataUserEncode={Base64.encrypt(
+																	JSON.stringify(
+																		data
+																	),
+																	"hoangyuri"
+																).toString()}
+																setID={setID}
+															/>
+														: <E404 />}
+												</motion.div>
+											</Fragment>
+										}
+									/>
+									<Route
+										path="/my-class"
+										exact
+										element={
+											<Fragment>
+												<motion.div
+													className="chi_don_gian_la_animation_element._."
+													initial="out"
+													animate="in"
+													exit="out"
+													variants={transitionRouter}>
+													{user
+														? <ClassComponent
+																Base64={Base64}
+																userEncode={Base64.encrypt(
+																	JSON.stringify(
+																		user
+																	),
+																	"hoangyuri"
+																).toString()}
+																dataUserEncode={Base64.encrypt(
+																	JSON.stringify(
+																		data
+																	),
+																	"hoangyuri"
+																).toString()}
+																setID={setID}
+															/>
+														: <E404 />}
+												</motion.div>
+											</Fragment>
+										}
+									/>
+									<Route
+										path="/exam/*"
+										exact
+										element={
+											<Fragment>
+												<motion.div
+													className="chi_don_gian_la_animation_element._."
+													initial="out"
+													animate="in"
+													exit="out"
+													variants={transitionRouter}>
+													{user
+														? <MainScreenExam />
+														: <E404 />}
+												</motion.div>
+											</Fragment>
+										}
+									/>
+									<Route
+										path="/*"
+										exact
+										element={
+											<Fragment>
+												<motion.div
+													className="chi_don_gian_la_animation_element._."
+													initial="out"
+													animate="in"
+													exit="out"
+													variants={transitionRouter}>
+													<E404 />
+												</motion.div>
+											</Fragment>
+										}
+									/>
+								</Routes>
+							</AnimatePresence>
 						</BrowserRouter>
 						<FooterComponent heightReturn={_h_} />
 					</Fragment>

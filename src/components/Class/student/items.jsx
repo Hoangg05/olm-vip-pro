@@ -1,19 +1,22 @@
+import moment from "moment";
 import { Fragment, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { ChildColumn, Column, Paginate } from "../../customs/class.styled";
 
-function PaginatedItems({ itemsPerPage, items, history, info }) {
+function PaginatedItems({ itemsPerPage, items, history }) {
 	const [currentItems, setCurrentItems] = useState(null);
 	const [pageCount, setPageCount] = useState(0);
 	const [itemOffset, setItemOffset] = useState(0);
 
 	useEffect(
 		() => {
-			if (items) {
+			let c = false;
+			if (items && !c) {
 				const endOffset = itemOffset + itemsPerPage;
 				setCurrentItems(items.slice(itemOffset, endOffset));
 				setPageCount(Math.ceil(items.length / itemsPerPage));
 			}
+			return () => (c = true);
 		},
 		[itemOffset, itemsPerPage, items]
 	);
@@ -25,7 +28,7 @@ function PaginatedItems({ itemsPerPage, items, history, info }) {
 
 	return (
 		<Fragment>
-			<Items data={currentItems} history={history} info={info} />
+			<Items data={currentItems} history={history} />
 			<Paginate>
 				<ChildColumn>
 					<ReactPaginate
@@ -41,7 +44,10 @@ function PaginatedItems({ itemsPerPage, items, history, info }) {
 		</Fragment>
 	);
 }
-function Items({ data, history, info }) {
+function Items({ data, history }) {
+	const time4mat = time => {
+		return time * 1000;
+	};
 	return (
 		data &&
 		data.map((item, index) => {
@@ -59,12 +65,18 @@ function Items({ data, history, info }) {
 						{item.__teacher.__name}
 					</ChildColumn>
 					<ChildColumn>
-						{item.__date.__start}
+						{moment(
+							time4mat(item.__date.__open.__start.seconds)
+						).fromNow()}
 					</ChildColumn>
 					<ChildColumn>
-						{item.__date.__end
-							? item.__date.__end
-							: "Không giới hạn"}
+						{item.__date.__lock
+							? "Đã hết giờ làm"
+							: item.__date.__open.__end
+								? moment(
+										time4mat(item.__date.__open.__end.seconds)
+									).fromNow()
+								: "Không giới hạn"}
 					</ChildColumn>
 				</Column>
 			);
