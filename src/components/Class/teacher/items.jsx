@@ -1,16 +1,16 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, memo, useContext, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { ChildColumn, Column, Paginate } from "../../customs/class.styled";
-import { doc, onSnapshot } from "firebase/firestore";
 import moment from "moment";
 import "moment/locale/vi";
+import { HandleContext } from "../../../Context";
 
-function PaginatedItems({ itemsPerPage, history, fs, data_user, filter }) {
+function PaginatedItems({ itemsPerPage, history, items }) {
+	const { user_data_store } = useContext(HandleContext);
 	moment.locale("vi");
 	const [currentItems, setCurrentItems] = useState(null);
 	const [pageCount, setPageCount] = useState(0);
 	const [itemOffset, setItemOffset] = useState(0);
-	const [[items, __class], setItems] = useState([null, null]);
 
 	useEffect(
 		() => {
@@ -32,19 +32,9 @@ function PaginatedItems({ itemsPerPage, history, fs, data_user, filter }) {
 
 	return (
 		<Fragment>
-			{data_user &&
-				data_user.__class.__all.map((item, index) =>
-					<Items
-						filter={filter}
-						key={index}
-						item={item}
-						dataSlice={currentItems}
-						history={history}
-						fs={fs}
-						setItems={setItems}
-						__class={__class}
-					/>
-				)}
+			{items &&
+				user_data_store &&
+				<Items dataSlice={currentItems} history={history} />}
 
 			<Paginate>
 				<ChildColumn>
@@ -62,46 +52,21 @@ function PaginatedItems({ itemsPerPage, history, fs, data_user, filter }) {
 	);
 }
 
-function Items({ history, dataSlice, fs, setItems, item, __class, filter }) {
-	useEffect(
-		() => {
-			let c = false;
-			if (c) return;
-			onSnapshot(doc(fs, "class", decodeStr(item.__id)), doc => {
-				if (doc.data())
-					setItems([
-						doc
-							.data()
-							.all_data.filter(
-								item =>
-									filter.value !== "Tất cả"
-										? item.__s === filter.value
-										: item
-							),
-						doc.data().__name
-					]);
-			});
-			return () => (c = true);
-		},
-		[fs, item, setItems, filter]
-	);
+function Items({ history, dataSlice }) {
 	return (
 		<Fragment>
-			{dataSlice &&
-				<Item data={dataSlice} __class={__class} history={history} />}
+			{dataSlice && <Item data={dataSlice} history={history} />}
 		</Fragment>
 	);
 }
 
-function Item({ data, history, __class }) {
+function Item({ data, history }) {
 	return (
 		data &&
 		data.map((item, index) => {
-			const time4mat = time => {
-				return time * 1000;
-			};
 			return (
 				<Column
+					no_hover={item.__date.__lock}
 					key={index}
 					onClick={() => history(`/exam/edit/${item.__id}`)}>
 					<ChildColumn>
@@ -111,11 +76,11 @@ function Item({ data, history, __class }) {
 						{item.__s}
 					</ChildColumn>
 					<ChildColumn>
-						{__class}
+						{item.__name}
 					</ChildColumn>
 					<ChildColumn>
 						{moment(
-							time4mat(item.__date.__open.__start.seconds)
+							item.__date.__open.__start.seconds * 1000
 						).fromNow()}
 					</ChildColumn>
 					<ChildColumn>
@@ -123,7 +88,7 @@ function Item({ data, history, __class }) {
 							? "Đã hết giờ làm"
 							: item.__date.__open.__end
 								? moment(
-										time4mat(item.__date.__open.__end.seconds)
+										item.__date.__open.__end.seconds * 1000
 									).fromNow()
 								: "Không giới hạn"}
 					</ChildColumn>
@@ -133,17 +98,4 @@ function Item({ data, history, __class }) {
 	);
 }
 
-function decodeStr(number) {
-	if (number) {
-		let string = "";
-		const length = number.length;
-		for (let i = 0; i < length; i++) {
-			const code = number.slice(i, (i += 2));
-			string += String.fromCharCode(parseInt(code, 16));
-		}
-		return string;
-	}
-	return false;
-}
-
-export default PaginatedItems;
+export default memo(PaginatedItems);

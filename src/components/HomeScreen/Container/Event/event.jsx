@@ -14,4 +14,4 @@ function EventComponent() {
 	);
 }
 
-export default EventComponent;
+export default React.memo(EventComponent);

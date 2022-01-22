@@ -69,4 +69,4 @@ function LoadingScreen({ p, t }) {
 	);
 }
 
-export default LoadingScreen;
+export default React.memo(LoadingScreen);

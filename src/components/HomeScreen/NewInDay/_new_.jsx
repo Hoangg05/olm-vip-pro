@@ -71,4 +71,4 @@ const NewContent = styled.a`
 	margin-right: 20vw;
 `;
 
-export default NewInDayComponent;
+export default React.memo(NewInDayComponent);

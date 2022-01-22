@@ -65,4 +65,4 @@ function FilterLectures() {
 	);
 }
 
-export default FilterLectures;
+export default React.memo(FilterLectures);

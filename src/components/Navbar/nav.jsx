@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from "react";
+import React, { Fragment, memo, useContext } from "react";
 import logo from "../images/logo/logo.png";
 import { BsThreeDots } from "react-icons/bs";
 import { AiFillCaretDown } from "react-icons/ai";
@@ -13,11 +13,10 @@ import {
 } from "../customs/navbar.styled";
 import { signOut, getAuth } from "firebase/auth";
 import app from "../../firebase/firebase";
+import { HandleContext } from "../../Context";
 
-function Navbar({ userEncode, isDrop, dropdown, Base64, enc }) {
-	const user = JSON.parse(
-		Base64.decrypt(userEncode, "hoangyuri").toString(enc)
-	);
+function Navbar({ isDrop, dropdown }) {
+	const { user_data_login, user_data_store } = useContext(HandleContext);
 
 	return (
 		<CustomNavbar>
@@ -42,7 +41,7 @@ function Navbar({ userEncode, isDrop, dropdown, Base64, enc }) {
 				</Child>
 			</Part>
 			<Part>
-				{!user &&
+				{!user_data_login &&
 					<Fragment>
 						<Part as="a" href="/login">
 							<Child isButton as="button" role="login">
@@ -55,15 +54,17 @@ function Navbar({ userEncode, isDrop, dropdown, Base64, enc }) {
 							</Child>
 						</Part>
 					</Fragment>}
-				{user &&
+				{user_data_login &&
 					<Part>
 						<Avatar>
 							<Icon
 								draggable={false}
 								full
 								src={
-									user
-										? user.photoURL ? user.photoURL : logo
+									user_data_login
+										? user_data_login.photoURL
+											? user_data_login.photoURL
+											: logo
 										: logo
 								}
 							/>
@@ -72,7 +73,7 @@ function Navbar({ userEncode, isDrop, dropdown, Base64, enc }) {
 							<Part
 								onClick={() => isDrop(dropdown ? false : true)}>
 								<h4>
-									{user.displayName}
+									{user_data_login.displayName}
 								</h4>
 								<AiFillCaretDown />
 							</Part>
@@ -84,9 +85,9 @@ function Navbar({ userEncode, isDrop, dropdown, Base64, enc }) {
 												full
 												draggable={false}
 												src={
-													user
-														? user.photoURL
-															? user.photoURL
+													user_data_login
+														? user_data_login.photoURL
+															? user_data_login.photoURL
 															: logo
 														: logo
 												}
@@ -97,13 +98,15 @@ function Navbar({ userEncode, isDrop, dropdown, Base64, enc }) {
 										<Child as="a" href="/profile/me" normal>
 											Trang cá nhân
 										</Child>
-										<Child
-											as="a"
-											href="/buy-vip"
-											color="blue"
-											normal>
+										<Child as="a" href="/buy-vip" normal>
 											Nạp VIP
 										</Child>
+										{user_data_store &&
+											user_data_store.role !==
+												"student" &&
+											<Child as="a" href="/exam" normal>
+												Trang giao bài
+											</Child>}
 										<Child
 											color="red"
 											normal

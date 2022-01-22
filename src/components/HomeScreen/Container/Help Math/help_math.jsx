@@ -87,4 +87,4 @@ function HelpMathComponent(props) {
 	);
 }
 
-export default HelpMathComponent;
+export default React.memo(HelpMathComponent);

@@ -16,4 +16,4 @@ function HelpComponent() {
 	);
 }
 
-export default HelpComponent;
+export default React.memo(HelpComponent);

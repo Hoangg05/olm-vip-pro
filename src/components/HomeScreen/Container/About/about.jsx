@@ -23,4 +23,4 @@ function AboutComponent() {
 	);
 }
 
-export default AboutComponent;
+export default React.memo(AboutComponent);

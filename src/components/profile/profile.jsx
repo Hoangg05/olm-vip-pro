@@ -1,6 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import logo from "../images/logo/logo.png";
-import * as enc from "crypto-js/enc-utf8";
 import { Avatar, Icon } from "../customs/navbar.styled";
 import {
 	ChangeImages,
@@ -10,52 +9,45 @@ import {
 	TableProperties,
 	User
 } from "../customs/profile.styled";
-import {
-	getStorage,
-	ref,
-	uploadBytesResumable,
-	getDownloadURL
-} from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import LoadingScreen from "../../loading_screen";
-import app from "../../firebase/firebase";
-import { updateProfile, getAuth } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
 import { useParams } from "react-router-dom";
-import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
+import { HandleContext } from "../../Context";
 
-function ProfileComponent({ userEncode, Base64, dataUserEncode, setID }) {
-	const auth = getAuth(app);
-	const storage = getStorage();
-	const fs = getFirestore(app);
+function ProfileComponent() {
+	const {
+		user_data_login,
+		user_data_store,
+		fs,
+		auth,
+		ConfigDataUser,
+		storage
+	} = useContext(HandleContext);
 
 	const { id } = useParams();
 
-	const [loading, setLoading] = useState(false);
-
-	const user_id = userEncode
-		? JSON.parse(Base64.decrypt(userEncode, "hoangyuri").toString(enc))
-		: null;
-
-	const data_user = dataUserEncode
-		? JSON.parse(Base64.decrypt(dataUserEncode, "hoangyuri").toString(enc))
-		: null;
-
 	useEffect(
 		() => {
-			if (id !== "me") {
-				setID(id);
-			} else {
-				setID(user_id);
-			}
+			let c = false;
+			if (c) return;
+			ConfigDataUser(id);
 		},
-		[id, setID, user_id]
+		[id, ConfigDataUser]
 	);
+
+	const [loading, setLoading] = useState(false);
 
 	const changeAvatar = async e => {
 		const file = e.target.files[0];
 
 		const metadata = { contentType: "image/jpeg" };
 
-		const storageRef = ref(storage, `avatar/${user_id}/${file.name}`);
+		const storageRef = ref(
+			storage,
+			`avatar/${user_data_login.uid}/${file.name}`
+		);
 		const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
 		await uploadTask.on(
@@ -66,14 +58,16 @@ function ProfileComponent({ userEncode, Base64, dataUserEncode, setID }) {
 			error => {
 				switch (error.code) {
 					case "storage/unauthorized":
-						console.log("You don't have a permission");
+						alert(
+							"Anh zai à anh không có quyền truy cập kho lưu trữ :V"
+						);
 						break;
 					case "storage/canceled":
-						console.log("You was canceled");
+						alert("Bạn đã hủy tiến trình thay đổi ảnh này!");
 						break;
 
 					default:
-						console.log("Unknown error");
+						alert("Xảy ra lỗi không xác định khi thay đổi ảnh!");
 						break;
 				}
 			},
@@ -84,11 +78,13 @@ function ProfileComponent({ userEncode, Base64, dataUserEncode, setID }) {
 					await updateProfile(auth.currentUser, {
 						photoURL: downloadURL
 					});
-					await updateDoc(doc(fs, "users", user_id), {
+					await updateDoc(doc(fs, "users", user_data_login.uid), {
 						photoURL: downloadURL
 					})
 						.then(() => setLoading(false))
-						.catch(() => console.log("Unknown error"));
+						.catch(() =>
+							alert("Xảy ra lỗi không xác định khi thay đổi ảnh!")
+						);
 				});
 			}
 		);
@@ -102,32 +98,34 @@ function ProfileComponent({ userEncode, Base64, dataUserEncode, setID }) {
 								<Icon
 									full
 									src={
-										data_user
-											? data_user.photoURL
-												? data_user.photoURL
+										user_data_login
+											? user_data_login.photoURL
+												? user_data_login.photoURL
 												: logo
 											: logo
 									}
-									alt={`Avatar của ${data_user &&
-										data_user.displayName} ${data_user &&
-									!data_user.photoURL
+									alt={`Avatar của ${user_data_login &&
+										user_data_login.displayName} ${user_data_login &&
+									!user_data_login.photoURL
 										? "(avatar mặc định)"
 										: ""}`}
 								/>
 							</Avatar>
 							<Information>
 								<Name>
-									{data_user && data_user.displayName}
+									{user_data_login &&
+										user_data_login.displayName}
 								</Name>
 								<ul>
 									<li>Lớp: 11D7</li>
-									{data_user &&
-										user_id &&
-										user_id === data_user.uid &&
+									{user_data_login &&
+										user_data_login.uid &&
+										(user_data_login.uid === id ||
+											id === "me") &&
 										<Fragment>
 											<li>
 												Tên đăng nhập:{" "}
-												{data_user.username}
+												{user_data_login.displayName}
 											</li>
 											<li>
 												<ChangeImages htmlFor="avatar">
@@ -153,47 +151,54 @@ function ProfileComponent({ userEncode, Base64, dataUserEncode, setID }) {
 								<p>Ngày đăng kí:</p>
 								<p>Vai trò:</p>
 								<p>
-									{data_user && data_user.vip.__value
-										? `Gói VIP "${data_user.vip.__package
-												.__name}":`
+									{user_data_store &&
+									user_data_store.vip.__value
+										? `Gói VIP "${user_data_store.vip
+												.__package.__name}":`
 										: "Chưa mua VIP"}
 								</p>
 							</div>
 							<div>
 								<p>
-									{data_user && data_user.eop}
+									{user_data_login &&
+									(user_data_login.uid === id || id === "me") &&
+									user_data_store
+										? user_data_store.eop
+										: "******"}
 								</p>
 								<p>
-									{data_user && data_user.uid}
+									{user_data_login && user_data_login.uid}
 								</p>
 								<p>
-									{data_user &&
-										new Date(
-											data_user.timeCreated
-										).toDateString()}
+									{user_data_store
+										? new Date(
+												user_data_store.timeCreated
+											).toDateString()
+										: "Lỗi kết nối với kho lưu trữ"}
 								</p>
 								<p>
-									{data_user &&
+									{user_data_store &&
 										{
 											student: "Học sinh",
 											teacher: "Giáo viên",
 											admin: "Quản trị viên",
 											null: ""
-										}[data_user.role]}
+										}[user_data_store.role]}
 								</p>
 								<p>
-									{data_user && data_user.vip.__value
-										? data_user.vip.__time.__buyAt +
+									{user_data_store &&
+									user_data_store.vip.__value
+										? user_data_store.vip.__time.__buyAt +
 											" - " +
-											data_user.vip.__time.__endAt
+											user_data_store.vip.__time.__endAt
 										: false}
 								</p>
 							</div>
 						</TableProperties>
 					</Profile>
-				: <LoadingScreen p={true} />}
+				: <LoadingScreen p />}
 		</Fragment>
 	);
 }
 
-export default ProfileComponent;
+export default React.memo(ProfileComponent);

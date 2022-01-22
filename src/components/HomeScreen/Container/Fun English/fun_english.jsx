@@ -93,4 +93,4 @@ function FunEnglishComponent(props) {
 	);
 }
 
-export default FunEnglishComponent;
+export default React.memo(FunEnglishComponent);

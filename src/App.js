@@ -1,29 +1,20 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 import HomeComponent from "./components/HomeScreen/_home_";
-import app from "./firebase/firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Navbar from "./components/Navbar/nav";
 import LoginComponent from "./components/Login and Register/login";
 import E404 from "./components/404/404";
 import { ToastContainer } from "react-toastify";
 import LoadingScreen from "./loading_screen";
 import RegisterComponent from "./components/Login and Register/res";
-import ProfileComponent from "./components/profile/profile";
-import * as Base64 from "crypto-js/aes";
-import * as enc from "crypto-js/enc-utf8";
+import ProfileComponent from "./components/Profile/profile";
 import FooterComponent from "./components/Footer/footer";
 import ClassComponent from "./components/Class/class";
-import {
-	collection,
-	query,
-	where,
-	onSnapshot,
-	getFirestore
-} from "firebase/firestore";
 import MainScreenExam from "./components/Exam/main";
 import { motion, AnimatePresence } from "framer-motion";
+import { HandleContext } from "./Context";
+// import disableDevtool from "disable-devtool";
 
 const transitionRouter = {
 	in: {
@@ -36,55 +27,22 @@ const transitionRouter = {
 	}
 };
 
+const transitionStyles = {
+	type: "easeIn",
+	case: "anticipate",
+	duration: 3
+};
+
 function MainComponent() {
-	const auth = getAuth(app);
-	const fs = getFirestore(app);
 	const [h, _h_] = useState(0);
-	const [[user, data], setUser] = useState([null, null]);
 	const [dropdown, isDrop] = useState(false);
-	const [id, setID] = useState(null);
-	// const [[exit, resize], cheat] = useState([false, false]);
-	const [load, isLoad] = useState(true);
-	useEffect(
-		() => {
-			let c = false;
-			if (!c && !data) {
-				onAuthStateChanged(auth, u => {
-					if (u) setUser([u, data]);
-					else setUser([null, data]);
-					isLoad(false);
-				});
 
-				if (user && id) {
-					const q = query(
-						collection(fs, "users"),
-						where("uid", "==", id)
-					);
-					if (q) {
-						onSnapshot(q, d => {
-							setUser([user, d.docs[0].data()]);
-						});
-					}
-				}
-			}
+	// disableDevtool({
+	// 	url:
+	// 		"http://fdvn.vn/gian-lan-trong-thi-cu-bi-phat-nhu-the-nao/#:~:text=Hành%20vi%20gian%20lận%20trong,người%20học%20không%20được%20làm.&text=Phạt%20tiền%20từ%202.000.000,chấm%20thi%2C%20phục%20vụ%20thi."
+	// });
 
-			return () => (c = true);
-
-			// window.addEventListener("visibilitychange", () => {
-			// 	cheat([document.visibilityState === "hidden", resize]);
-			// });
-
-			// window.addEventListener(
-			// 	"resize",
-			// 	() => {
-			// 		cheat([exit, true]);
-			// 	},
-			// 	true
-			// );
-		},
-		[auth, user, data, fs, id]
-	);
-
+	const { user_data_login, load } = useContext(HandleContext);
 	return (
 		<BODY
 			h={h}
@@ -94,16 +52,7 @@ function MainComponent() {
 			<ToastContainer />
 			{!load
 				? <Fragment>
-						<Navbar
-							userEncode={Base64.encrypt(
-								JSON.stringify(user),
-								"hoangyuri"
-							).toString()}
-							isDrop={isDrop}
-							dropdown={dropdown}
-							Base64={Base64}
-							enc={enc}
-						/>
+						<Navbar isDrop={isDrop} dropdown={dropdown} />
 						<BrowserRouter>
 							<AnimatePresence>
 								<Routes>
@@ -113,6 +62,7 @@ function MainComponent() {
 										element={
 											<Fragment>
 												<motion.div
+													transition={transitionStyles}
 													className="chi_don_gian_la_animation_element._."
 													initial="out"
 													animate="in"
@@ -129,19 +79,13 @@ function MainComponent() {
 										element={
 											<Fragment>
 												<motion.div
+													transition={transitionStyles}
 													className="chi_don_gian_la_animation_element._."
 													initial="out"
 													animate="in"
 													exit="out"
 													variants={transitionRouter}>
-													<LoginComponent
-														Base64={Base64}
-														userEncode={Base64.encrypt(
-															JSON.stringify(user),
-															"hoangyuri"
-														).toString()}
-														auth={auth}
-													/>
+													<LoginComponent />
 												</motion.div>
 											</Fragment>
 										}
@@ -152,18 +96,13 @@ function MainComponent() {
 										element={
 											<Fragment>
 												<motion.div
+													transition={transitionStyles}
 													className="chi_don_gian_la_animation_element._."
 													initial="out"
 													animate="in"
 													exit="out"
 													variants={transitionRouter}>
-													<RegisterComponent
-														Base64={Base64}
-														userEncode={Base64.encrypt(
-															JSON.stringify(user),
-															"hoangyuri"
-														).toString()}
-													/>
+													<RegisterComponent />
 												</motion.div>
 											</Fragment>
 										}
@@ -173,31 +112,21 @@ function MainComponent() {
 										exact
 										element={
 											<Fragment>
-												<motion.div
-													className="chi_don_gian_la_animation_element._."
-													initial="out"
-													animate="in"
-													exit="out"
-													variants={transitionRouter}>
-													{user
-														? <ProfileComponent
-																Base64={Base64}
-																userEncode={Base64.encrypt(
-																	JSON.stringify(
-																		user.uid
-																	),
-																	"hoangyuri"
-																).toString()}
-																dataUserEncode={Base64.encrypt(
-																	JSON.stringify(
-																		data
-																	),
-																	"hoangyuri"
-																).toString()}
-																setID={setID}
-															/>
-														: <E404 />}
-												</motion.div>
+												{user_data_login
+													? <motion.div
+															transition={
+																transitionStyles
+															}
+															className="chi_don_gian_la_animation_element._."
+															initial="out"
+															animate="in"
+															exit="out"
+															variants={
+																transitionRouter
+															}>
+															<ProfileComponent />
+														</motion.div>
+													: <E404 />}
 											</Fragment>
 										}
 									/>
@@ -206,31 +135,21 @@ function MainComponent() {
 										exact
 										element={
 											<Fragment>
-												<motion.div
-													className="chi_don_gian_la_animation_element._."
-													initial="out"
-													animate="in"
-													exit="out"
-													variants={transitionRouter}>
-													{user
-														? <ClassComponent
-																Base64={Base64}
-																userEncode={Base64.encrypt(
-																	JSON.stringify(
-																		user
-																	),
-																	"hoangyuri"
-																).toString()}
-																dataUserEncode={Base64.encrypt(
-																	JSON.stringify(
-																		data
-																	),
-																	"hoangyuri"
-																).toString()}
-																setID={setID}
-															/>
-														: <E404 />}
-												</motion.div>
+												{user_data_login
+													? <motion.div
+															transition={
+																transitionStyles
+															}
+															className="chi_don_gian_la_animation_element._."
+															initial="out"
+															animate="in"
+															exit="out"
+															variants={
+																transitionRouter
+															}>
+															<ClassComponent />
+														</motion.div>
+													: <E404 />}
 											</Fragment>
 										}
 									/>
@@ -239,35 +158,25 @@ function MainComponent() {
 										exact
 										element={
 											<Fragment>
-												<motion.div
-													className="chi_don_gian_la_animation_element._."
-													initial="out"
-													animate="in"
-													exit="out"
-													variants={transitionRouter}>
-													{user
-														? <MainScreenExam />
-														: <E404 />}
-												</motion.div>
+												{user_data_login
+													? <motion.div
+															transition={
+																transitionStyles
+															}
+															className="chi_don_gian_la_animation_element._."
+															initial="out"
+															animate="in"
+															exit="out"
+															variants={
+																transitionRouter
+															}>
+															<MainScreenExam />
+														</motion.div>
+													: <E404 />}
 											</Fragment>
 										}
 									/>
-									<Route
-										path="/*"
-										exact
-										element={
-											<Fragment>
-												<motion.div
-													className="chi_don_gian_la_animation_element._."
-													initial="out"
-													animate="in"
-													exit="out"
-													variants={transitionRouter}>
-													<E404 />
-												</motion.div>
-											</Fragment>
-										}
-									/>
+									<Route path="/*" exact element={<E404 />} />
 								</Routes>
 							</AnimatePresence>
 						</BrowserRouter>
@@ -279,12 +188,13 @@ function MainComponent() {
 }
 
 const BODY = styled.div`
+	padding-top: 4vh;
 	background: ${props => props.background || "#fff"};
 	width: 100%;
-	height: 92vh;
+	min-height: 92vh;
 	display: grid;
 	align-items: baseline;
 	grid-template-rows: 1fr auto;
 `;
 
-export default MainComponent;
+export default React.memo(MainComponent);

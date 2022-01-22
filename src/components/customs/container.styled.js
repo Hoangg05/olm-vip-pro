@@ -110,7 +110,7 @@ const Avatar = styled.div`
 const Question = styled.div`padding: 10px;`;
 
 const Username = styled.h4`
-	font-weight: bold;
+	font-weight: 500;
 	font-family: "Poppins", sans-serif;
 `;
 

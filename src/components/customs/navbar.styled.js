@@ -4,7 +4,7 @@ const CustomNavbar = styled.ul`
 	width: 100%;
 	height: 8vh;
 	max-height: 8vh;
-	padding: 0 10%;
+	padding: 0 5%;
 	background-color: #fafafa;
 	background-image: linear-gradient(to bottom, #fff5c3, #fff77e);
 	background-repeat: repeat-x;
@@ -17,6 +17,7 @@ const CustomNavbar = styled.ul`
 	top: 0;
 	left: 0;
 	z-index: 100;
+	list-style-type: none;
 `;
 
 const Part = styled.ul`
@@ -82,7 +83,7 @@ const Child = styled.li`
 	transition: all .4s linear;
 	font-size: ${props => (props.hasIcon ? 3 : 2)}vh;
 	margin: 0 10px;
-	font-weight: bold;
+	font-weight: 500;
 	white-space: nowrap;
 	${props => !props.normal && "text-transform: uppercase"};
 	${props =>

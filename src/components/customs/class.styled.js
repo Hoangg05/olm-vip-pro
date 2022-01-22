@@ -14,20 +14,29 @@ const TableProperties = styled.table`
 		width: 100%;
 		height: 100%;
 	}
+	& * {
+		list-style-type: none;
+	}
 `;
 
 const Column = styled.tr`
 	display: grid;
-	grid-template-columns: repeat(${({ c }) => c || 5}, 1fr);
+	${({ custom_grid, c }) =>
+		custom_grid
+			? custom_grid
+			: `
+	grid-template-columns: repeat( ${c || 5}, 1fr);
+	`};
 	transition: all 1s linear;
 	${({ no_hover }) =>
-		!no_hover &&
-		`&:hover {
+		!no_hover
+			? `&:hover {
 		background-color: #2fa2ff;
 		& * {
 			color: #fff;
 		}
-	}`};
+	}`
+			: `background-color: #ddd;`};
 	&:nth-child(1) th {
 		color: #ffffff;
 		border: none;
@@ -47,8 +56,15 @@ const ChildColumn = styled.td`
 	border-top: none;
 	white-space: nowrap;
 	max-width: 100%;
+	${props =>
+		!props.no_overflow &&
+		`
 	overflow: hidden;
+	`};
 	text-overflow: ellipsis;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 `;
 
 const Paginate = styled.tr`
@@ -96,14 +112,19 @@ const Button = styled.button`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	${props =>
+		!props.m0 &&
+		`
 	margin: 0 10px;
+	`};
 	border-radius: 10px;
 	font-size: 14px;
-	font-weight: bold;
+	font-weight: 500;
 	font-family: "Mulish", sans-serif;
 	& svg {
 		margin-right: 5px;
 	}
+	${props => props.w && `width: 100%;`};
 `;
 
 export {

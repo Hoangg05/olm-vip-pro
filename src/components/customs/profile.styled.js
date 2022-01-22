@@ -4,6 +4,9 @@ const Profile = styled.div`
 	width: 100%;
 	height: 100%;
 	padding: 20px;
+	& * {
+		list-style: none;
+	}
 `;
 
 const User = styled.div`

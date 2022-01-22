@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, Images, Input, UserInput } from "../customs/login.styled";
+import {
+	Button,
+	Images,
+	Input,
+	UserInput,
+	InputGroup
+} from "../customs/login.styled";
 import {
 	CaptchaForm,
 	CaptchaCode,
@@ -57,7 +63,7 @@ function RegisterComponent(props) {
 								{
 									displayName: name,
 									username,
-									avatar: auth.currentUser.photoURL,
+									photoURL: auth.currentUser.photoURL,
 									eop,
 									timeCreated: time,
 									role: "student",
@@ -121,95 +127,107 @@ function RegisterComponent(props) {
 			<Images src={logo} />
 			<div>
 				<h1>Đăng ký</h1>
-				<UserInput place="left">
+				<UserInput>
 					<Input htmlFor="name">
-						<p>Tên của bạn</p>
-						<input
-							required
-							type="text"
-							id="name"
-							autoComplete="off"
-							onChange={e =>
-								userInput([
-									e.target.value,
-									username,
-									password,
-									eop,
-									OTP
-								])}
-						/>
+						<InputGroup>
+							<p>Tên của bạn</p>
+							<input
+								required
+								type="text"
+								id="name"
+								autoComplete="off"
+								onChange={e =>
+									userInput([
+										e.target.value,
+										username,
+										password,
+										eop,
+										OTP
+									])}
+							/>
+						</InputGroup>
 					</Input>
 					<Input htmlFor="username">
-						<p>Tài khoản</p>
-						<input
-							required
-							type="text"
-							id="username"
-							autoComplete="off"
-							onChange={e => {
-								e.target.value = e.target.value.replace(
-									" ",
-									""
-								);
-								userInput([
-									name,
-									e.target.value,
-									password,
-									eop,
-									OTP
-								]);
-							}}
-						/>
+						<InputGroup>
+							<p>Tài khoản</p>
+							<input
+								required
+								type="text"
+								id="username"
+								autoComplete="off"
+								onChange={e => {
+									e.target.value = e.target.value.replace(
+										" ",
+										""
+									);
+									userInput([
+										name,
+										e.target.value,
+										password,
+										eop,
+										OTP
+									]);
+								}}
+							/>
+						</InputGroup>
 					</Input>
 					<Input htmlFor="password">
-						<p>Mật khẩu</p>
-						<input
-							required
-							type="password"
-							id="password"
-							placeholder={"******"}
-							onChange={e =>
-								userInput([
-									name,
-									username,
-									e.target.value,
-									eop,
-									OTP
-								])}
-						/>
-					</Input>
-					<Input htmlFor="eop">
-						<p>Email hoặc SĐT</p>
-						<input
-							required
-							type="text"
-							id="eop"
-							placeholder={"Nhập bố láo là xóa tài khoản ;)"}
-							onChange={e =>
-								userInput([
-									name,
-									username,
-									password,
-									e.target.value,
-									OTP
-								])}
-						/>
-					</Input>
-					<CaptchaForm>
-						<Input htmlFor="OTP">
-							<p>Mã xác nhận</p>
-							<CaptchaInput
+						<InputGroup>
+							<p>Mật khẩu</p>
+							<input
 								required
-								id="OTP"
+								type="password"
+								id="password"
+								placeholder={"******"}
+								onChange={e =>
+									userInput([
+										name,
+										username,
+										e.target.value,
+										eop,
+										OTP
+									])}
+							/>
+						</InputGroup>
+					</Input>
+
+					<Input htmlFor="eop">
+						<InputGroup>
+							<p>Email hoặc SĐT</p>
+							<input
+								required
+								type="text"
+								id="eop"
+								placeholder={"Nhập bố láo là xóa tài khoản ;)"}
 								onChange={e =>
 									userInput([
 										name,
 										username,
 										password,
-										eop,
-										e.target.value
+										e.target.value,
+										OTP
 									])}
 							/>
+						</InputGroup>
+					</Input>
+
+					<CaptchaForm>
+						<Input htmlFor="OTP" m0>
+							<InputGroup>
+								<p>Mã xác nhận</p>
+								<CaptchaInput
+									required
+									id="OTP"
+									onChange={e =>
+										userInput([
+											name,
+											username,
+											password,
+											eop,
+											e.target.value
+										])}
+								/>
+							</InputGroup>
 						</Input>
 						<CaptchaCode>
 							<ClientCaptcha
@@ -239,4 +257,4 @@ function RegisterComponent(props) {
 	);
 }
 
-export default RegisterComponent;
+export default React.memo(RegisterComponent);

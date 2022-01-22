@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
 	Answer,
 	Avatar,
@@ -86,4 +87,4 @@ const NiceLiteratureComponent = props => {
 	);
 };
 
-export default NiceLiteratureComponent;
+export default memo(NiceLiteratureComponent);

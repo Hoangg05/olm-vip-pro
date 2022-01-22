@@ -7,6 +7,9 @@ const CarouselComponentCustom = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	& * {
+		list-style-type: none;
+	}
 `;
 
 const Button = styled.div`

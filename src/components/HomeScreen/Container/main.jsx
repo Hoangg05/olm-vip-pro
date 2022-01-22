@@ -22,4 +22,4 @@ function ContainerComponent() {
 	);
 }
 
-export default ContainerComponent;
+export default React.memo(ContainerComponent);

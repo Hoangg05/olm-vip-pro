@@ -87,4 +87,4 @@ const FunMathComponent = props => {
 	);
 };
 
-export default FunMathComponent;
+export default React.memo(FunMathComponent);

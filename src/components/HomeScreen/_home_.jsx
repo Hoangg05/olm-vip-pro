@@ -17,9 +17,12 @@ function HomeComponent() {
 }
 
 const CustomHome = styled.main`
-	font-weight: bold;
+	font-weight: 500;
 	width: 85%;
 	margin: 10px auto;
+	& * {
+		list-style-type: none;
+	}
 `;
 
-export default HomeComponent;
+export default React.memo(HomeComponent);

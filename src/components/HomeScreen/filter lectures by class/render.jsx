@@ -23,4 +23,4 @@ function RenderLectures(props) {
 	);
 }
 
-export default RenderLectures;
+export default React.memo(RenderLectures);

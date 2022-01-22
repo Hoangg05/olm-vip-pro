@@ -24,12 +24,18 @@ const UserInput = styled.div`
 	flex-direction: column;
 `;
 
+const InputGroup = styled.div`
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+`;
+
 const Input = styled.label`
 	width: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin: 10px;
+	margin: ${props => (props.m0 ? "10px 0" : "10px")};
 	& input {
 		width: 100%;
 		border: none;
@@ -65,7 +71,7 @@ const Button = styled.input`
 	font-size: 15px;
 	color: #fff;
 	font-family: "Mulish", sans-serif;
-	font-weight: bold;
+	font-weight: 500;
 	background: linear-gradient(to bottom, ${props => props.background});
 	border-radius: 5px;
 	margin: 10px;
@@ -75,4 +81,4 @@ const Button = styled.input`
 	}
 `;
 
-export { LoginForm, UserInput, Images, Input, Forgot, Button };
+export { LoginForm, UserInput, Images, Input, Forgot, Button, InputGroup };

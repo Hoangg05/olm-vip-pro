@@ -20,4 +20,4 @@ const CarouselComponent = () => {
 	);
 };
 
-export default CarouselComponent;
+export default React.memo(CarouselComponent);

@@ -24,4 +24,13 @@ const news = [
 	" Trên 5500 trường đã sử dụng OLM để dạy học kết hợp trực tuyến với trực tiếp (blended learning). OLM hoàn toàn miễn phí cho các nhà trường để tổ chức dạy, học, thi trực tuyến; Kể cả học liệu có sẵn trên OLM cũng được miễn phí để các thầy cô và nhà trường giao bài cho học sinh. Xem chi tiết tại đây."
 ];
 
-export { lectures, news };
+const typeExam = [
+	{ value: 1, label: "Trắc nghiệm" },
+	{ value: 2, label: "Tự luận" },
+	{ value: 3, label: "Đề thông minh" },
+	{ value: 4, label: "Video" },
+	{ value: 5, label: "Ảnh" },
+	{ value: 6, label: "Trả lời nhanh" }
+];
+
+export { lectures, news, typeExam };
