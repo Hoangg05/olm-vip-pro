@@ -77,9 +77,7 @@ function StudentThemes({ history, customStyles }) {
 					.forEach(async item => {
 						const end_time = item.__date.__open.__end;
 						if (end_time) {
-							const _e_ = end_time.seconds * 1000;
-							if (_n_ >= _e_) {
-								console.log("Loaded!!!");
+							if (_n_ >= end_time) {
 								item.__date.__lock = true;
 								await updateDoc(doc(fs, "class", id_data), {
 									all_data
@@ -160,7 +158,20 @@ function StudentThemes({ history, customStyles }) {
 								{__class
 									? <PaginatedItems
 											itemsPerPage={7}
-											items={__class}
+											items={__class
+												.filter(
+													exam =>
+														exam.__who_make.indexOf(
+															user_data_login.uid
+														) > -1
+												)
+												.sort(
+													(exam1, exam2) =>
+														exam2.__date.__open
+															.__start -
+														exam1.__date.__open
+															.__start
+												)}
 											history={history}
 										/>
 									: <tr>

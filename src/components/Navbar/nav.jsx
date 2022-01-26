@@ -14,6 +14,7 @@ import {
 import { signOut, getAuth } from "firebase/auth";
 import app from "../../firebase/firebase";
 import { HandleContext } from "../../Context";
+import { Link } from "react-router-dom";
 
 function Navbar({ isDrop, dropdown }) {
 	const { user_data_login, user_data_store } = useContext(HandleContext);
@@ -21,20 +22,22 @@ function Navbar({ isDrop, dropdown }) {
 	return (
 		<CustomNavbar>
 			<Part>
-				<Part as="a" href="/" icon>
-					<Icon draggable={false} src={logo} />
+				<Part icon>
+					<Link to="/">
+						<Icon draggable={false} src={logo} />
+					</Link>
 				</Part>
-				<Child as="a" href="/study">
-					học bài
+				<Child>
+					<Link to="/courses">học bài</Link>
 				</Child>
-				<Child as="a" href="/ask">
-					hỏi bài
+				<Child>
+					<Link to="/ask">hỏi bài</Link>
 				</Child>
-				<Child as="a" href="/help">
-					trợ giúp
+				<Child>
+					<Link to="/help">trợ giúp</Link>
 				</Child>
-				<Child as="a" href="/my-class">
-					lớp của tôi
+				<Child>
+					<Link to="/my-class">lớp của tôi</Link>
 				</Child>
 				<Child hasIcon>
 					<BsThreeDots />
@@ -43,15 +46,19 @@ function Navbar({ isDrop, dropdown }) {
 			<Part>
 				{!user_data_login &&
 					<Fragment>
-						<Part as="a" href="/login">
-							<Child isButton as="button" role="login">
-								Đăng nhập
-							</Child>
+						<Part>
+							<Link to="/login">
+								<Child isButton as="button" role="login">
+									Đăng nhập
+								</Child>
+							</Link>
 						</Part>
-						<Part as="a" href="/register">
-							<Child isButton as="button">
-								Đăng ký
-							</Child>
+						<Part>
+							<Link to="/register">
+								<Child isButton as="button">
+									Đăng ký
+								</Child>
+							</Link>
 						</Part>
 					</Fragment>}
 				{user_data_login &&
@@ -95,17 +102,21 @@ function Navbar({ isDrop, dropdown }) {
 										</Avatar>
 									</Part>
 									<Part column>
-										<Child as="a" href="/profile/me" normal>
-											Trang cá nhân
+										<Child normal>
+											<Link to="/profile/me">
+												Trang cá nhân
+											</Link>
 										</Child>
-										<Child as="a" href="/buy-vip" normal>
-											Nạp VIP
+										<Child normal>
+											<Link to="/buy-vip">Nạp VIP</Link>
 										</Child>
 										{user_data_store &&
 											user_data_store.role !==
 												"student" &&
-											<Child as="a" href="/exam" normal>
-												Trang giao bài
+											<Child normal>
+												<Link to="/exam">
+													Trang giao bài
+												</Link>
 											</Child>}
 										<Child
 											color="red"

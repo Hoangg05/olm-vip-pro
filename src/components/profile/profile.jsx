@@ -98,34 +98,34 @@ function ProfileComponent() {
 								<Icon
 									full
 									src={
-										user_data_login
-											? user_data_login.photoURL
-												? user_data_login.photoURL
+										user_data_store
+											? user_data_store.photoURL
+												? user_data_store.photoURL
 												: logo
 											: logo
 									}
-									alt={`Avatar của ${user_data_login &&
-										user_data_login.displayName} ${user_data_login &&
-									!user_data_login.photoURL
+									alt={`Avatar của ${user_data_store &&
+										user_data_store.displayName} ${user_data_store &&
+									!user_data_store.photoURL
 										? "(avatar mặc định)"
 										: ""}`}
 								/>
 							</Avatar>
 							<Information>
 								<Name>
-									{user_data_login &&
-										user_data_login.displayName}
+									{user_data_store &&
+										user_data_store.displayName}
 								</Name>
 								<ul>
 									<li>Lớp: 11D7</li>
-									{user_data_login &&
-										user_data_login.uid &&
-										(user_data_login.uid === id ||
+									{user_data_store &&
+										user_data_store.uid &&
+										(user_data_store.uid === id ||
 											id === "me") &&
 										<Fragment>
 											<li>
 												Tên đăng nhập:{" "}
-												{user_data_login.displayName}
+												{user_data_store.displayName}
 											</li>
 											<li>
 												<ChangeImages htmlFor="avatar">
@@ -160,14 +160,14 @@ function ProfileComponent() {
 							</div>
 							<div>
 								<p>
-									{user_data_login &&
-									(user_data_login.uid === id || id === "me") &&
+									{user_data_store &&
+									(user_data_store.uid === id || id === "me") &&
 									user_data_store
 										? user_data_store.eop
 										: "******"}
 								</p>
 								<p>
-									{user_data_login && user_data_login.uid}
+									{user_data_store && user_data_store.uid}
 								</p>
 								<p>
 									{user_data_store

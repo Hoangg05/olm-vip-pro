@@ -1,13 +1,13 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyBOX_J0XpwbJwzgEZpPZr5siMRn-v8yug4",
-	authDomain: "olm-vip-pro.firebaseapp.com",
-	projectId: "olm-vip-pro",
-	storageBucket: "olm-vip-pro.appspot.com",
-	messagingSenderId: "156637200427",
-	appId: "1:156637200427:web:5a1089d105a178f86d6a6e",
-	measurementId: "G-4TV1NFJXR4"
+	apiKey: process.env.REACT_APP_API_KEY,
+	authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+	projectId: process.env.REACT_APP_PROJECT_ID,
+	storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+	messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+	appId: process.env.REACT_APP_APP_ID,
+	measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);

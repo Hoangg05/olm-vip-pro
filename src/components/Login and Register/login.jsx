@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	Button,
@@ -12,24 +12,22 @@ import logo from "../images/logo/logo2.png";
 import { BsQuestionCircleFill } from "react-icons/bs";
 import { toast } from "react-toastify";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import * as enc from "crypto-js/enc-utf8";
+import { HandleContext } from "../../Context";
 
-function LoginComponent(props) {
-	const user = JSON.parse(
-		props.Base64.decrypt(props.userEncode, "hoangyuri").toString(enc)
-	);
+function LoginComponent() {
+	const { user_data_login, auth } = useContext(HandleContext);
 	const history = useNavigate();
 	const [submit, isSubmit] = useState(false);
 	const [[username, password], userInput] = useState([null]);
 	useEffect(
 		() => {
 			let c = false;
-			if (user && !c) history("/profile/me");
+			if (user_data_login && !c) history("/profile/me");
 			return () => {
 				c = true;
 			};
 		},
-		[history, user]
+		[history, user_data_login]
 	);
 
 	const Login = async e => {
@@ -37,7 +35,7 @@ function LoginComponent(props) {
 		isSubmit(true);
 		try {
 			await signInWithEmailAndPassword(
-				props.auth,
+				auth,
 				`${username}@gmail.com`,
 				password
 			);

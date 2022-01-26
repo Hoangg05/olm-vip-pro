@@ -21,14 +21,25 @@ const CustomNavbar = styled.ul`
 `;
 
 const Part = styled.ul`
+	list-style-type: none;
 	display: flex;
 	align-items: center;
-	${props => props.icon && "width: 8vw;"};
 	height: 100%;
+	${props => props.icon && "width: 8vw;height: 100%;overflow: hidden;"};
 	justify-content: center;
 	${props => props.column && "flex-direction: column;width: 100%;"};
 	& h4 {
 		white-space: nowrap;
+	}
+	& ul,
+	& li {
+		height: 100%;
+		& a {
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 	}
 `;
 
@@ -41,7 +52,7 @@ const PartDropDown = styled.ul`
 	place-items: center;
 	grid-template-columns: repeat(2, 1fr);
 	grid-gap: 20px;
-	height: fit-content;
+	height: fit-content !important;
 	padding: 20px;
 	border-radius: 4px;
 	background-color: #fff;

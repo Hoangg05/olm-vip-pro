@@ -1,6 +1,6 @@
 import * as AES from "crypto-js/aes";
 
-export default React.memo(function encode(str, pass, console_refresh = true) {
+export default function encode(str, pass, console_refresh = false) {
 	let _e_ = AES.encrypt(JSON.stringify(str), pass).toString();
 
 	let c = _e_.indexOf("/");

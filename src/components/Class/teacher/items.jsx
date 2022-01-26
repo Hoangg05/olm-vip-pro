@@ -5,7 +5,7 @@ import moment from "moment";
 import "moment/locale/vi";
 import { HandleContext } from "../../../Context";
 
-function PaginatedItems({ itemsPerPage, history, items }) {
+function PaginatedItems({ itemsPerPage, history, items, filterLectures }) {
 	const { user_data_store } = useContext(HandleContext);
 	moment.locale("vi");
 	const [currentItems, setCurrentItems] = useState(null);
@@ -34,7 +34,11 @@ function PaginatedItems({ itemsPerPage, history, items }) {
 		<Fragment>
 			{items &&
 				user_data_store &&
-				<Items dataSlice={currentItems} history={history} />}
+				<Items
+					dataSlice={currentItems}
+					history={history}
+					filterLectures={filterLectures}
+				/>}
 
 			<Paginate>
 				<ChildColumn>
@@ -52,20 +56,37 @@ function PaginatedItems({ itemsPerPage, history, items }) {
 	);
 }
 
-function Items({ history, dataSlice }) {
+function Items({ history, dataSlice, filterLectures }) {
 	return (
 		<Fragment>
-			{dataSlice && <Item data={dataSlice} history={history} />}
+			{dataSlice &&
+				<Item
+					data={dataSlice}
+					history={history}
+					filterLectures={filterLectures}
+				/>}
 		</Fragment>
 	);
 }
 
-function Item({ data, history }) {
+function Item({ data, history, filterLectures }) {
+	const data_group = Array.from(new Set(data.map(a => a.__id)))
+		.map(id => {
+			return data.find(a => a.__id === id);
+		})
+		.filter(
+			item =>
+				filterLectures.value !== "Tất cả"
+					? item.__s.value === filterLectures.value
+					: item
+		);
+
 	return (
-		data &&
-		data.map((item, index) => {
+		data_group &&
+		data_group.map((item, index) => {
 			return (
 				<Column
+					c={4}
 					no_hover={item.__date.__lock}
 					key={index}
 					onClick={() => history(`/exam/edit/${item.__id}`)}>
@@ -73,23 +94,16 @@ function Item({ data, history }) {
 						{item.__title}
 					</ChildColumn>
 					<ChildColumn>
-						{item.__s}
+						{item.__s.label}
 					</ChildColumn>
 					<ChildColumn>
-						{item.__name}
-					</ChildColumn>
-					<ChildColumn>
-						{moment(
-							item.__date.__open.__start.seconds * 1000
-						).fromNow()}
+						{moment(item.__date.__open.__start).fromNow()}
 					</ChildColumn>
 					<ChildColumn>
 						{item.__date.__lock
-							? "Đã hết giờ làm"
+							? "Đã khóa bài"
 							: item.__date.__open.__end
-								? moment(
-										item.__date.__open.__end.seconds * 1000
-									).fromNow()
+								? moment(item.__date.__open.__end).fromNow()
 								: "Không giới hạn"}
 					</ChildColumn>
 				</Column>

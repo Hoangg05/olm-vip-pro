@@ -52,9 +52,13 @@ function MainComponent() {
 			<ToastContainer />
 			{!load
 				? <Fragment>
-						<Navbar isDrop={isDrop} dropdown={dropdown} />
 						<BrowserRouter>
 							<AnimatePresence>
+								<Navbar
+									key={0}
+									isDrop={isDrop}
+									dropdown={dropdown}
+								/>
 								<Routes>
 									<Route
 										path="/"
@@ -176,7 +180,7 @@ function MainComponent() {
 											</Fragment>
 										}
 									/>
-									<Route path="/*" exact element={<E404 />} />
+									<Route path="*" exact element={<E404 />} />
 								</Routes>
 							</AnimatePresence>
 						</BrowserRouter>

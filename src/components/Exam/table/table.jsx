@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, Fragment, useContext, useEffect } from "react";
 import {
 	ChildColumn,
 	ClassViewCustom,
@@ -7,72 +7,32 @@ import {
 } from "../../customs/class.styled";
 import { ButtonTask, DropdownTask } from "../../customs/exam.styled";
 import { RiArrowDropDownLine } from "react-icons/ri";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
 import DelAsk from "../pop_up";
 import { useNavigate } from "react-router-dom";
+import { HandleContext } from "../../../Context";
 
-function TableExam({ user, fs }) {
-	const [dropdown, isDropdown] = useState(false);
-	const [[__class, all_data, id_data], setAllData] = useState([
-		null,
-		null,
-		null
-	]);
-	const [[show_popup, name], isDel] = useState([false, null]);
+function TableExam() {
+	const { all_data__tables, user_data_login, filterDataTables } = useContext(
+		HandleContext
+	);
+	const [[show_popup, itemDel], isDel] = useState([false, null]);
 	const history = useNavigate();
 
 	useEffect(
 		() => {
-			let c = false;
-			if (c) return;
-			const q = user
-				? query(
-						collection(fs, "class"),
-						where("__teachers", "array-contains", user.uid)
-					)
-				: null;
-			const getRTD = q
-				? onSnapshot(q, doc => {
-						if (!doc) return;
-						const _d_ = doc.docs.reduce((_, item) => {
-							return item.data().all_data;
-						}, []);
-						const _d_f_ = _d_.filter(
-							item => item.__teacher.__id === user.uid
-						);
-						setAllData([
-							doc.docs.reduce((arr, item) => {
-								const d = item.data();
-								arr.push({
-									__k: d.__k,
-									__name: d.__name,
-									__school: d.__school,
-									__type: d.__type,
-									__year: d.__year
-								});
-								return arr;
-							}, []),
-							_d_f_,
-							doc.docs.reduce((arr, item) => {
-								arr.push(item.id);
-								return arr;
-							}, [])
-						]);
-					})
-				: null;
-			return () => {
-				c = true;
-				if (typeof getRTD === "function") {
-					getRTD();
-				}
-			};
+			filterDataTables({
+				path: "class",
+				callback: "__teachers",
+				type: "array-contains",
+				value: user_data_login.uid
+			});
 		},
-		[user, fs, all_data, id_data, __class]
+		[filterDataTables, user_data_login.uid]
 	);
 
 	return (
 		<Fragment>
-			{!show_popup && user
+			{!show_popup && user_data_login
 				? <ClassViewCustom>
 						<h1>Trang giao bài tập</h1>
 						<div>
@@ -122,8 +82,8 @@ function TableExam({ user, fs }) {
 											Trạng thái
 										</ChildColumn>
 									</Column>
-									{all_data &&
-										all_data.map((item, index) => {
+									{all_data__tables &&
+										all_data__tables.map((item, index) => {
 											const time = new Date().getTime();
 											return (
 												<Column
@@ -137,64 +97,25 @@ function TableExam({ user, fs }) {
 														{item.__title}
 													</ChildColumn>
 													<ChildColumn>
-														{
+														{new Date(
 															item.__date.__create
-																.__start
-														}
+														).toDateString()}
 													</ChildColumn>
 													<ChildColumn>
-														{item.__type.__name}
+														{item.__s.label}
 													</ChildColumn>
 													<ChildColumn>
-														{item.__s}
+														{item.__s.label}
 													</ChildColumn>
 													<ChildColumn no_overflow>
-														<ButtonTask
-															onClick={() =>
-																isDropdown(
-																	!dropdown
-																)}>
-															<p>
-																Chọn{" "}
-																<RiArrowDropDownLine />
-															</p>
-															{dropdown &&
-																<DropdownTask>
-																	<ButtonTask
-																		w100
-																		type="green"
-																		onClick={() =>
-																			history(
-																				`/exam/watch/${item.__id}`
-																			)}>
-																		Xem, giao
-																		bài
-																	</ButtonTask>
-
-																	<ButtonTask
-																		onClick={() =>
-																			history(
-																				`/exam/edit/${item.__id}`
-																			)}
-																		w100
-																		type="blue">
-																		Sửa đổi
-																	</ButtonTask>
-
-																	<ButtonTask
-																		w100
-																		type="red"
-																		onClick={() =>
-																			isDel(
-																				[
-																					!show_popup,
-																					item.__title
-																				]
-																			)}>
-																		Xóa
-																	</ButtonTask>
-																</DropdownTask>}
-														</ButtonTask>
+														<TaskManager
+															history={history}
+															isDel={isDel}
+															item={item}
+															show_popup={
+																show_popup
+															}
+														/>
 													</ChildColumn>
 													<ChildColumn>
 														{time >=
@@ -212,8 +133,42 @@ function TableExam({ user, fs }) {
 							</TableProperties>
 						</div>
 					</ClassViewCustom>
-				: <DelAsk isDel={isDel} name={name} />}
+				: <DelAsk isDel={isDel} itemDel={itemDel} />}
 		</Fragment>
+	);
+}
+
+function TaskManager({ history, isDel, item, show_popup }) {
+	const [dropdown, isDropdown] = useState(false);
+	return (
+		<ButtonTask onClick={() => isDropdown(!dropdown)}>
+			<p>
+				Chọn <RiArrowDropDownLine />
+			</p>
+			{dropdown &&
+				<DropdownTask>
+					<ButtonTask
+						w100
+						type="green"
+						onClick={() => history(`/exam/watch/${item.__id}`)}>
+						Xem, giao bài
+					</ButtonTask>
+
+					<ButtonTask
+						onClick={() => history(`/exam/edit/${item.__id}`)}
+						w100
+						type="blue">
+						Sửa đổi
+					</ButtonTask>
+
+					<ButtonTask
+						w100
+						type="red"
+						onClick={() => isDel([!show_popup, item])}>
+						Xóa
+					</ButtonTask>
+				</DropdownTask>}
+		</ButtonTask>
 	);
 }
 

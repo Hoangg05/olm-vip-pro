@@ -59,24 +59,20 @@ function Items({ data, history }) {
 						{item.__title}
 					</ChildColumn>
 					<ChildColumn>
-						{item.__s}
+						{item.__s.value}
 					</ChildColumn>
 					<ChildColumn>
 						{item.__teacher.__name}
 					</ChildColumn>
 					<ChildColumn>
-						{moment(
-							item.__date.__open.__start.seconds * 1000
-						).fromNow()}
+						{moment(item.__date.__open.__start).fromNow()}
 					</ChildColumn>
 					<ChildColumn>
 						{item.__date.__lock
 							? "Đã hết giờ làm"
 							: item.__date.__open.__end
 								? moment(
-										new Date(
-											item.__date.__open.__end.seconds * 1000
-										)
+										new Date(item.__date.__open.__end)
 									).fromNow()
 								: "Không giới hạn"}
 					</ChildColumn>
