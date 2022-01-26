@@ -15,6 +15,7 @@ import MainScreenExam from "./components/Exam/main";
 import { motion, AnimatePresence } from "framer-motion";
 import { HandleContext } from "./Context";
 import disableDevtool from "disable-devtool";
+import GoogleAds from "./Google-Ads";
 
 const transitionRouter = {
 	in: {
@@ -59,6 +60,7 @@ function MainComponent() {
 									isDrop={isDrop}
 									dropdown={dropdown}
 								/>
+								<GoogleAds />
 								<Routes>
 									<Route
 										path="/"
