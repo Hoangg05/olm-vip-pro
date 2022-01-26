@@ -14,7 +14,7 @@ import ClassComponent from "./components/Class/class";
 import MainScreenExam from "./components/Exam/main";
 import { motion, AnimatePresence } from "framer-motion";
 import { HandleContext } from "./Context";
-// import disableDevtool from "disable-devtool";
+import disableDevtool from "disable-devtool";
 
 const transitionRouter = {
 	in: {
@@ -37,10 +37,10 @@ function MainComponent() {
 	const [h, _h_] = useState(0);
 	const [dropdown, isDrop] = useState(false);
 
-	// disableDevtool({
-	// 	url:
-	// 		"http://fdvn.vn/gian-lan-trong-thi-cu-bi-phat-nhu-the-nao/#:~:text=Hành%20vi%20gian%20lận%20trong,người%20học%20không%20được%20làm.&text=Phạt%20tiền%20từ%202.000.000,chấm%20thi%2C%20phục%20vụ%20thi."
-	// });
+	disableDevtool({
+		url:
+			"http://fdvn.vn/gian-lan-trong-thi-cu-bi-phat-nhu-the-nao/#:~:text=Hành%20vi%20gian%20lận%20trong,người%20học%20không%20được%20làm.&text=Phạt%20tiền%20từ%202.000.000,chấm%20thi%2C%20phục%20vụ%20thi."
+	});
 
 	const { user_data_login, load } = useContext(HandleContext);
 	return (
