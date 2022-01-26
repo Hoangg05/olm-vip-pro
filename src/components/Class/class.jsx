@@ -39,7 +39,7 @@ const ClassComponent = () => {
 					customStyles={customStyles}
 					fs={fs}
 				/>
-		: <LoadingScreen p />;
+		: <LoadingScreen p={true} />;
 };
 
 export default React.memo(ClassComponent);
