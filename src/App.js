@@ -14,7 +14,7 @@ import ClassComponent from "./components/Class/class";
 import MainScreenExam from "./components/Exam/main";
 import { motion, AnimatePresence } from "framer-motion";
 import { HandleContext } from "./Context";
-import disableDevtool from "disable-devtool";
+// import disableDevtool from "disable-devtool";
 import GoogleAds from "./Google-Ads";
 
 const transitionRouter = {
