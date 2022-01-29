@@ -15,6 +15,7 @@ import { updateProfile } from "firebase/auth";
 import { useParams } from "react-router-dom";
 import { doc, updateDoc } from "firebase/firestore";
 import { HandleContext } from "../../Context";
+import { toast } from "react-toastify";
 
 function ProfileComponent() {
 	const {
@@ -81,9 +82,16 @@ function ProfileComponent() {
 					await updateDoc(doc(fs, "users", user_data_login.uid), {
 						photoURL: downloadURL
 					})
-						.then(() => setLoading(false))
+						.then(() => {
+							setLoading(false);
+							toast.success(
+								"Thay đổi ảnh thành công! Load lại trang để thấy sự thay đổi!"
+							);
+						})
 						.catch(() =>
-							alert("Xảy ra lỗi không xác định khi thay đổi ảnh!")
+							toast.warn(
+								"Xảy ra lỗi không xác định khi thay đổi ảnh!"
+							)
 						);
 				});
 			}

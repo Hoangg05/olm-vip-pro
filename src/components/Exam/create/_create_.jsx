@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { CreateCustomComponent } from "../../customs/exam.styled";
-import ConfigurationExam from "./config_exam";
+import ConfigurationExam from "./create_form";
 import { HandleContext } from "../../../Context";
 
 function CreateExamComponent() {

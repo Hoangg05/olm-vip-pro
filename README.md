@@ -26,9 +26,15 @@ Web gốc: [Click vào đây :3](https://olm.vn "https://olm.vn")
 -   **Chép bài sml nên chưa làm xong trang tạo bài kiểm tra🥲**
 -   **Firebase đầy bộ nhớ** 🤧
 
-#### UPDATE [26/02/2022]:
+#### UPDATE [26/01/2022]:
 
 -   **Đã làm xong logic tạo bài kiểm tra**
 -   **Làm xong chức năng xóa bài kiểm tra**
 -   **Cập nhật lại bảng hiển thị các bài kiểm tra**
 -   **Add quảng cáo kiếm tiền ăn Tết với sửa màn hình máy tính 😥**
+
+#### **UPDATE [29/01/2022]:**
+
+-   **Tối ưu hóa code khiến cho trang web bớt lag**
+-   **Xóa bỏ hiệu ứng không cần thiết**
+-   **Đang làm trang làm bài, sửa bài kiểm tra**

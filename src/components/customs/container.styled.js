@@ -12,7 +12,7 @@ const Container = styled.main`
 const Card = styled.div`
 	width: 100%;
 	height: fit-content;
-	border-radius: 25px 25px 0 0;
+	border-radius: 10px 10px 0 0;
 	overflow: hidden;
 	& a h4 {
 		width: 100%;
@@ -40,6 +40,9 @@ const Card = styled.div`
 		padding: 20px 0;
 		font-size: 3vh;
 		text-align: center;
+	}
+	@media (min-width: 770px) {
+		grid-column: 1/3;
 	}
 `;
 

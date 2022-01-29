@@ -96,4 +96,33 @@ const CreateCustomComponent = styled.div`
 	height: 100%;
 `;
 
-export { ButtonTask, DropdownTask, PopUpParent, CreateCustomComponent };
+const CreateFormExam = styled(CreateCustomComponent)`
+	padding: 0 38px;
+	& * {
+		margin: 8px 0;
+	}
+	& input {
+		transition: 1s linear;
+		width: 100%;
+		align-items: center;
+		border-radius: 4px;
+		background-color: hsl(0, 0%, 100%);
+		border: 1px solid hsl(0, 0%, 80%);
+		min-height: 38px;
+		position: relative;
+		padding: 2px 8px;
+		font-size: 18px;
+		&[type="submit"]:hover {
+			background-color: #7289da;
+			color: #fff;
+		}
+	}
+`;
+
+export {
+	ButtonTask,
+	DropdownTask,
+	PopUpParent,
+	CreateCustomComponent,
+	CreateFormExam
+};

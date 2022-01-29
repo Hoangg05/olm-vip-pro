@@ -16,7 +16,7 @@ import {
 	TableProperties
 } from "../../customs/class.styled";
 import { lectures } from "../../__data__.module";
-import PaginatedItems from "./items";
+import PaginatedItems from "../PaginatedItems";
 
 function TeacherThemes({ history, customStyles }) {
 	const {
@@ -37,7 +37,7 @@ function TeacherThemes({ history, customStyles }) {
 
 	useEffect(
 		() => {
-			if (!all_data__tables) {
+			if (!all_data__tables && user_data_login && user_data_store) {
 				filterDataTables({
 					path: "class",
 					callback: "__teachers",
@@ -45,10 +45,18 @@ function TeacherThemes({ history, customStyles }) {
 					value: user_data_login.uid
 				});
 			}
+		},
+		[user_data_login, user_data_store, all_data__tables, filterDataTables]
+	);
+
+	useEffect(
+		() => {
 			if (id_data__tables && all_data__tables) {
-				all_data__tables
-					.filter(item => item.__date.__lock === false)
-					.forEach(async (item, index) => {
+				const data_can_update = all_data__tables.filter(
+					item => item.__date.__lock === false
+				);
+				if (data_can_update) {
+					data_can_update.forEach(async (item, index) => {
 						const end_time = item.__date.__open.__end;
 						if (end_time) {
 							if (_n_ >= end_time) {
@@ -63,18 +71,10 @@ function TeacherThemes({ history, customStyles }) {
 							}
 						}
 					});
+				}
 			}
 		},
-		[
-			user_data_login,
-			user_data_store,
-			fs,
-			filterLectures,
-			all_data__tables,
-			id_data__tables,
-			_n_,
-			filterDataTables
-		]
+		[_n_, all_data__tables, fs, id_data__tables]
 	);
 
 	return (
@@ -125,15 +125,38 @@ function TeacherThemes({ history, customStyles }) {
 								{all_data__tables && all_data__tables.length > 0
 									? <PaginatedItems
 											fs={fs}
-											itemsPerPage={7}
+											role={user_data_store.role}
+											itemsPerPage={5}
 											history={history}
 											filter={filterLectures}
-											items={all_data__tables.sort(
-												(exam1, exam2) =>
-													exam2.__date.__open.__start -
-													exam1.__date.__open.__start
-											)}
-											filterLectures={filterLectures}
+											items={Array.from(
+												new Set(
+													all_data__tables
+														.sort(
+															(exam1, exam2) =>
+																exam2.__date
+																	.__open
+																	.__start -
+																exam1.__date
+																	.__open
+																	.__start
+														)
+														.map(a => a.__id)
+												)
+											)
+												.map(id => {
+													return all_data__tables.find(
+														a => a.__id === id
+													);
+												})
+												.filter(
+													item =>
+														filterLectures.value !==
+														"Tất cả"
+															? item.__s.value ===
+																filterLectures.value
+															: item
+												)}
 										/>
 									: <tr>
 											<ChildColumn>

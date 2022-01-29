@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useState, useMemo } from "react";
 import app from "./firebase/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
@@ -31,7 +31,7 @@ function Context({ children }) {
 	const [id_user_config, ConfigDataUser] = useState(null);
 
 	// filter data table teacher
-	const [filter_data_tables, filterDataTables] = useState([null, null]);
+	const [filter_data_tables, filterDataTables] = useState(null);
 
 	// class data
 
@@ -40,34 +40,37 @@ function Context({ children }) {
 	// data table teacher
 	const [[__class__tables, all_data__tables], setDataTables] = useState([
 		null,
-		null,
 		null
 	]);
 
 	const [load, isLoad] = useState(true);
 
 	// logic
-	useEffect(
+	useMemo(
 		() => {
-			isLoad(false);
-			onAuthStateChanged(auth, u => {
-				if (u) StoreDataUser([u, user_data_store]);
-				else StoreDataUser([null, null]);
-			});
-			const Snapshot = user_data_login
-				? id_user_config && id_user_config !== "me"
-					? onSnapshot(doc(fs, "users", id_user_config), d => {
-							if (d && d.data())
-								StoreDataUser([user_data_login, d.data()]);
-						})
-					: onSnapshot(doc(fs, "users", user_data_login.uid), d => {
-							if (d && d.data())
-								StoreDataUser([user_data_login, d.data()]);
-						})
-				: function() {};
+			const Auth = !user_data_login
+				? onAuthStateChanged(auth, u => {
+						if (u) StoreDataUser([u, user_data_store]);
+						else StoreDataUser([null, null]);
+						isLoad(false);
+					})
+				: false;
+			const Snapshot =
+				user_data_login && !user_data_store
+					? id_user_config && id_user_config !== "me"
+						? onSnapshot(doc(fs, "users", id_user_config), d => {
+								if (d && d.data())
+									StoreDataUser([user_data_login, d.data()]);
+							})
+						: onSnapshot(doc(fs, "users", user_data_login.uid), d => {
+								if (d && d.data())
+									StoreDataUser([user_data_login, d.data()]);
+							})
+					: false;
 
 			return () => {
-				Snapshot();
+				Snapshot && Snapshot();
+				Auth && Auth();
 			};
 		},
 		[user_data_login, user_data_store, fs, auth, id_user_config]
@@ -77,11 +80,7 @@ function Context({ children }) {
 	useMemo(
 		() => {
 			const q =
-				filter_data_tables &&
-				filter_data_tables.path &&
-				filter_data_tables.callback &&
-				filter_data_tables.type &&
-				filter_data_tables.value
+				filter_data_tables && !all_data__tables && !__class__tables
 					? query(
 							collection(fs, filter_data_tables.path),
 							where(
@@ -91,59 +90,74 @@ function Context({ children }) {
 							)
 						)
 					: null;
-			const Snapshot = q
-				? onSnapshot(q, doc => {
-						if (!doc) return;
-						const d = doc.docs.reduce((_, item) => {
-							_.push(...item.data().all_data);
-							return _.reduce((arr, itemChild) => {
-								itemChild["__idHash"] = item.id;
-								arr.push(itemChild);
-								return arr;
+			const Snapshot =
+				q && !all_data__tables && !__class__tables
+					? onSnapshot(q, doc => {
+							if (!doc) return;
+							const d = doc.docs.reduce((_, item) => {
+								_.push(...item.data().all_data);
+								return _.reduce((arr, itemChild) => {
+									itemChild["__idHash"] = item.id;
+									arr.push(itemChild);
+									return arr;
+								}, []);
 							}, []);
-						}, []);
 
-						const _d_f_ = d.filter(
-							item => item.__teacher.__id === user_data_login.uid
-						);
-						setDataTables([
-							doc.docs.reduce((arr, item) => {
-								const d = item.data();
-								arr.push({
-									__k: d.__k,
-									__name: d.__name,
-									__school: d.__school,
-									__type: d.__type,
-									__year: d.__year
-								});
-								return arr;
-							}, []),
-							_d_f_
-						]);
-						setClassData(
-							doc.docs.reduce((_, val) => {
-								const data = val.data();
-								if (data.__name) {
-									_.push({
-										[data.__name]: data.__students,
-										__name: data.__name,
-										__type: data.__type,
-										__school: data.__school,
-										__k: data.__k,
-										__year: data.__year,
-										__idHash: val.id
+							const _d_f_ = d.filter(
+								item =>
+									user_data_store.role !== "student"
+										? item.__teacher.__id ===
+											user_data_login.uid
+										: item.__who_make.indexOf(
+												user_data_login.uid
+											) > -1
+							);
+
+							setDataTables([
+								doc.docs.reduce((arr, item) => {
+									const d = item.data();
+									arr.push({
+										__k: d.__k,
+										__name: d.__name,
+										__school: d.__school,
+										__type: d.__type,
+										__year: d.__year
 									});
-								}
-								return _;
-							}, [])
-						);
-					})
-				: function() {};
+									return arr;
+								}, []),
+								_d_f_
+							]);
+							setClassData(
+								doc.docs.reduce((_, val) => {
+									const data = val.data();
+									if (data.__name) {
+										_.push({
+											[data.__name]: data.__students,
+											__name: data.__name,
+											__type: data.__type,
+											__school: data.__school,
+											__k: data.__k,
+											__year: data.__year,
+											__idHash: val.id
+										});
+									}
+									return _;
+								}, [])
+							);
+						})
+					: false;
 			return () => {
-				Snapshot();
+				Snapshot && Snapshot();
 			};
 		},
-		[filter_data_tables, fs, user_data_login]
+		[
+			__class__tables,
+			all_data__tables,
+			filter_data_tables,
+			fs,
+			user_data_login,
+			user_data_store
+		]
 	);
 
 	return (

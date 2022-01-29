@@ -15,6 +15,7 @@ import { HandleContext } from "../../../Context";
 import encode from "../../../encode";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { CreateFormExam } from "../../customs/exam.styled";
 
 function ConfigurationExam({ Class }) {
 	const { fs, user_data_login } = useContext(HandleContext);
@@ -253,39 +254,85 @@ function ConfigurationExam({ Class }) {
 	return (
 		<Fragment>
 			{!submit
-				? <form onSubmit={e => handleSubmit(e)}>
-						<div>
-							<input
-								placeholder="Tên bài"
-								required
-								onChange={e => {
-									e.target.value = e.target.value.replace(
-										/^ +/gm,
-										""
-									);
-									setDataExamToCreate([
-										e.target.value,
-										__type,
-										__who_make,
-										__id,
-										__protection,
-										__date,
-										__data__exam,
-										__results,
-										__teacher,
-										__s,
-										__year
-									]);
-								}}
-							/>
+				? <CreateFormExam as="form" onSubmit={e => handleSubmit(e)}>
+						<input
+							placeholder="Tên bài"
+							required
+							onChange={e => {
+								e.target.value = e.target.value.replace(
+									/^ +/gm,
+									""
+								);
+								setDataExamToCreate([
+									e.target.value,
+									__type,
+									__who_make,
+									__id,
+									__protection,
+									__date,
+									__data__exam,
+									__results,
+									__teacher,
+									__s,
+									__year
+								]);
+							}}
+						/>
+						<Select
+							placeholder="Chọn kiểu câu hỏi"
+							options={typeExam}
+							onChange={val =>
+								setDataExamToCreate([
+									__title,
+									val,
+									__who_make,
+									__id,
+									__protection,
+									__date,
+									__data__exam,
+									__results,
+									__teacher,
+									__s,
+									__year
+								])}
+							required
+						/>
+						<Select
+							placeholder="Chọn môn học"
+							options={lecturesCreateExam}
+							onChange={val =>
+								setDataExamToCreate([
+									__title,
+									__type,
+									__who_make,
+									__id,
+									__protection,
+									__date,
+									__data__exam,
+									__results,
+									__teacher,
+									val,
+									__year
+								])}
+							required
+						/>
+						{class_arr &&
 							<Select
-								placeholder="Chọn kiểu câu hỏi"
-								options={typeExam}
+								required
+								placeholder="Chọn lớp giao bài"
+								options={class_arr}
+								isMulti
 								onChange={val =>
 									setDataExamToCreate([
 										__title,
-										val,
-										__who_make,
+										__type,
+										val.reduce((arr, item) => {
+											arr.push({
+												class: item,
+												student_lst: null
+											});
+											return arr;
+										}, []),
 										__id,
 										__protection,
 										__date,
@@ -295,97 +342,49 @@ function ConfigurationExam({ Class }) {
 										__s,
 										__year
 									])}
-								required
-							/>
+							/>}
+						{__who_make &&
+							__who_make.length > 0 &&
 							<Select
-								placeholder="Chọn môn học"
-								options={lecturesCreateExam}
+								required
+								placeholder="Chọn đối tượng giao bài"
+								isMulti
+								options={student_arr}
 								onChange={val =>
 									setDataExamToCreate([
 										__title,
 										__type,
-										__who_make,
+										__who_make.reduce((_, item) => {
+											_.push({
+												class: item.class,
+												student_lst: {
+													value: val.filter(
+														student =>
+															student.id_class ===
+															item.class.value
+													),
+													id_class: item.class.value
+												}
+											});
+											return _;
+										}, []),
 										__id,
 										__protection,
 										__date,
 										__data__exam,
 										__results,
 										__teacher,
-										val,
+										__s,
 										__year
 									])}
-								required
-							/>
-							{class_arr &&
-								<Select
-									required
-									placeholder="Chọn lớp giao bài"
-									options={class_arr}
-									isMulti
-									onChange={val =>
-										setDataExamToCreate([
-											__title,
-											__type,
-											val.reduce((arr, item) => {
-												arr.push({
-													class: item,
-													student_lst: null
-												});
-												return arr;
-											}, []),
-											__id,
-											__protection,
-											__date,
-											__data__exam,
-											__results,
-											__teacher,
-											__s,
-											__year
-										])}
-								/>}
-							{__who_make &&
-								__who_make.length > 0 &&
-								<Select
-									required
-									placeholder="Chọn đối tượng giao bài"
-									isMulti
-									options={student_arr}
-									onChange={val =>
-										setDataExamToCreate([
-											__title,
-											__type,
-											__who_make.reduce((_, item) => {
-												_.push({
-													class: item.class,
-													student_lst: {
-														value: val.filter(
-															student =>
-																student.id_class ===
-																item.class.value
-														),
-														id_class: item.class.value
-													}
-												});
-												return _;
-											}, []),
-											__id,
-											__protection,
-											__date,
-											__data__exam,
-											__results,
-											__teacher,
-											__s,
-											__year
-										])}
-								/>}
-						</div>
+							/>}
 						{__type &&
 							__title &&
 							__who_make &&
 							__who_make.length > 0 &&
 							__who_make[0].student_lst &&
 							<input type="submit" placeholder="Xác nhận" />}
-					</form>
+					</CreateFormExam>
 				: <LoadingScreen />}
 		</Fragment>
 	);

@@ -76,11 +76,10 @@ const Paginate = styled.tr`
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			margin: 0 auto;
 			& li {
 				padding: 5px 10px;
 				width: 100%;
-				border: 1px solid #ddd;
+				${({ no_border }) => !no_border && "border: 1px solid #ddd;"};
 			}
 		}
 	}
