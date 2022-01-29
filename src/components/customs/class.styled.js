@@ -65,6 +65,11 @@ const ChildColumn = styled.td`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	${props =>
+		props.paginate &&
+		`& svg {
+		margin: 0 15px;
+	}`};
 `;
 
 const Paginate = styled.tr`

@@ -39,7 +39,7 @@ const PaginatedItems = React.memo(({ itemsPerPage, items, history, role }) => {
 				? <ItemsTeacher history={history} dataSlice={currentItems} />
 				: <ItemsStudent history={history} dataSlice={currentItems} />}
 			<Paginate no_border>
-				<ChildColumn>
+				<ChildColumn paginate>
 					<GrChapterPrevious
 						onClick={() =>
 							setItemOffset(itemOffset > 1 ? itemOffset - 2 : 0)}
