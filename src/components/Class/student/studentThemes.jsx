@@ -20,8 +20,7 @@ function StudentThemes({ history, customStyles }) {
 		user_data_store,
 		fs,
 		all_data__tables,
-		filterDataTables,
-		id_data__tables
+		filterDataTables
 	} = useContext(HandleContext);
 
 	const [filterLectures, setFilterLectures] = useState({
@@ -46,7 +45,7 @@ function StudentThemes({ history, customStyles }) {
 
 	useEffect(
 		() => {
-			if (id_data__tables && all_data__tables) {
+			if (all_data__tables) {
 				const data_can_update = all_data__tables.filter(
 					item => item.__date.__lock === false
 				);
@@ -57,9 +56,12 @@ function StudentThemes({ history, customStyles }) {
 							if (_n_ >= end_time) {
 								item.__date.__lock = true;
 								await updateDoc(
-									doc(fs, "class", id_data__tables[index]),
+									doc(fs, "class", item.__idHash),
 									{
-										all_data__tables
+										all_data: all_data__tables.filter(
+											exam =>
+												exam.__idHash === item.__idHash
+										)
 									}
 								);
 							}
@@ -68,7 +70,7 @@ function StudentThemes({ history, customStyles }) {
 				}
 			}
 		},
-		[_n_, all_data__tables, fs, id_data__tables]
+		[_n_, all_data__tables, fs]
 	);
 
 	return (

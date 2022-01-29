@@ -24,7 +24,6 @@ function TeacherThemes({ history, customStyles }) {
 		user_data_store,
 		fs,
 		all_data__tables,
-		id_data__tables,
 		filterDataTables
 	} = useContext(HandleContext);
 
@@ -51,30 +50,32 @@ function TeacherThemes({ history, customStyles }) {
 
 	useEffect(
 		() => {
-			if (id_data__tables && all_data__tables) {
+			if (all_data__tables) {
 				const data_can_update = all_data__tables.filter(
 					item => item.__date.__lock === false
 				);
 				if (data_can_update) {
-					data_can_update.forEach(async (item, index) => {
+					data_can_update.forEach(async item => {
 						const end_time = item.__date.__open.__end;
 						if (end_time) {
 							if (_n_ >= end_time) {
 								item.__date.__lock = true;
 								await updateDoc(
-									doc(fs, "class", id_data__tables[index]),
+									doc(fs, "class", item.__idHash),
 									{
-										all_data__tables
+										all_data: all_data__tables.filter(
+											exam =>
+												exam.__idHash === item.__idHash
+										)
 									}
 								);
-								return false;
 							}
 						}
 					});
 				}
 			}
 		},
-		[_n_, all_data__tables, fs, id_data__tables]
+		[_n_, all_data__tables, fs]
 	);
 
 	return (

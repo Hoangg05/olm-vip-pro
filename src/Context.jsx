@@ -95,14 +95,18 @@ function Context({ children }) {
 					? onSnapshot(q, doc => {
 							if (!doc) return;
 							const d = doc.docs.reduce((_, item) => {
-								_.push(...item.data().all_data);
-								return _.reduce((arr, itemChild) => {
-									itemChild["__idHash"] = item.id;
-									arr.push(itemChild);
-									return arr;
-								}, []);
+								if (item.data().all_data.length === 0) return _;
+								_.push(
+									...item
+										.data()
+										.all_data.reduce((arr, itemChild) => {
+											itemChild["__idHash"] = item.id;
+											arr.push(itemChild);
+											return arr;
+										}, [])
+								);
+								return _;
 							}, []);
-
 							const _d_f_ = d.filter(
 								item =>
 									user_data_store.role !== "student"
