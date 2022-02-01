@@ -35,29 +35,17 @@ function MainComponent() {
 								<Route
 									path="/"
 									exact
-									element={
-										<Fragment>
-											<HomeComponent />
-										</Fragment>
-									}
+									element={<HomeComponent />}
 								/>
 								<Route
 									path="/login"
 									exact
-									element={
-										<Fragment>
-											<LoginComponent />
-										</Fragment>
-									}
+									element={<LoginComponent />}
 								/>
 								<Route
 									path="/register"
 									exact
-									element={
-										<Fragment>
-											<RegisterComponent />
-										</Fragment>
-									}
+									element={<RegisterComponent />}
 								/>
 								<Route
 									path="/profile/:id"

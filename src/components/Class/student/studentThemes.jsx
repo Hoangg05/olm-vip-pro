@@ -31,14 +31,12 @@ function StudentThemes({ history, customStyles }) {
 
 	useEffect(
 		() => {
-			if (!all_data__tables && user_data_login && user_data_store) {
-				filterDataTables({
-					path: "class",
-					callback: "__students",
-					type: "array-contains",
-					value: user_data_login.uid
-				});
-			}
+			filterDataTables({
+				path: "class",
+				callback: "__students",
+				type: "array-contains",
+				value: user_data_login.uid
+			});
 		},
 		[all_data__tables, filterDataTables, user_data_login, user_data_store]
 	);
@@ -80,9 +78,6 @@ function StudentThemes({ history, customStyles }) {
 					Trang học tập của {user_data_login.displayName}
 				</h1>
 				<ClassTask>
-					{/* {__information && <h2>
-							Lớp {__information.__name}, Trường {{ 1: "Tiểu học", 2: "Trung học", 3: "THPT" }[__information.__type]} {__information.__school}
-						</h2>} */}
 					<ClassTask flex>
 						<Button>
 							<BsFillPeopleFill />

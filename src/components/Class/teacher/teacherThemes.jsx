@@ -36,14 +36,12 @@ function TeacherThemes({ history, customStyles }) {
 
 	useEffect(
 		() => {
-			if (!all_data__tables && user_data_login && user_data_store) {
-				filterDataTables({
-					path: "class",
-					callback: "__teachers",
-					type: "array-contains",
-					value: user_data_login.uid
-				});
-			}
+			filterDataTables({
+				path: "class",
+				callback: "__teachers",
+				type: "array-contains",
+				value: user_data_login.uid
+			});
 		},
 		[user_data_login, user_data_store, all_data__tables, filterDataTables]
 	);

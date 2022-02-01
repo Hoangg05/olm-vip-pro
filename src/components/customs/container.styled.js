@@ -41,7 +41,7 @@ const Card = styled.div`
 		font-size: 3vh;
 		text-align: center;
 	}
-	@media screen and (max-width: 770px) {
+	@media screen and (max-width: 900px) {
 		grid-column: 1/3;
 	}
 `;

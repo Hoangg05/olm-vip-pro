@@ -38,3 +38,9 @@ Web gốc: [Click vào đây :3](https://olm.vn "https://olm.vn")
 -   **Tối ưu hóa code khiến cho trang web bớt lag**
 -   **Xóa bỏ hiệu ứng không cần thiết**
 -   **Đang làm trang làm bài, sửa bài kiểm tra**
+
+#### UPDATE [01/02/2022]:
+
+-   **Làm xong cơ bản trang sửa bài kiểm tra**
+-   **Fix các case ẩn**
+-   **Mã hóa một số dữ liệu quan trọng**
