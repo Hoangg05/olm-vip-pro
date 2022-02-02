@@ -149,11 +149,9 @@ function EditTools({ updateCharacters, characters }) {
 								</div>}
 						</Droppable>
 					</DragDropContext>
-					<div>
-						<button onClick={() => isCreatePopup(true)}>
-							<h2>Create Exam !</h2>
-						</button>
-					</div>
+					<Button onClick={() => isCreatePopup(true)}>
+						<h2>+</h2>
+					</Button>
 				</Fragment>}
 			{createPopup &&
 				<POPUPComponent
@@ -176,6 +174,7 @@ const RemoveExamQuest = styled.div`
 	right: 1%;
 	color: #9b84ee;
 	border-radius: 50%;
+	cursor: pointer;
 `;
 
 const ExamQuestion = styled.div`
@@ -196,6 +195,17 @@ const Answer = styled.div`
 		margin-right: 10px;
 		border: none;
 	}
+`;
+
+const Button = styled.div`
+	border: none;
+	background: #7289da;
+	padding: 5px 12px;
+	border-radius: 10px;
+	font-size: 20px;
+	margin: 20px auto;
+	width: fit-content;
+	color: #ddd;
 `;
 
 export default memo(EditTools);

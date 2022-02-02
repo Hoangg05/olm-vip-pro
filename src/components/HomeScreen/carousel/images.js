@@ -8,7 +8,7 @@ function importAll(r) {
 }
 
 const images = importAll(
-	require.context("../../images/carousel images", false, /\.(png|jpe?g|svg)$/)
+	require.context("../../images/carousel images", true, /\.(png|jpe?g|svg)$/)
 );
 
 export default images;

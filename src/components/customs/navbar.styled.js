@@ -3,7 +3,6 @@ import styled from "styled-components";
 const CustomNavbar = styled.ul`
 	width: 100%;
 	height: 8vh;
-	max-height: 8vh;
 	padding: 0 5%;
 	background-color: #fafafa;
 	background-image: linear-gradient(to bottom, #fff5c3, #fff77e);
