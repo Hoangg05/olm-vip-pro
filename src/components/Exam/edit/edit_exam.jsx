@@ -100,6 +100,7 @@ function EditExamComponent() {
 						)[0].__date.__lock)
 					}
 					returnProtect={setProtect}
+					protect={protect}
 				/>
 				<EditTools
 					updateCharacters={setDataExamProject}
