@@ -91,10 +91,10 @@ function MainComponent() {
 }
 
 const BODY = styled.div`
-	padding-top: 4vh;
+	padding-top: 65px;
 	background: ${props => props.background || "#fff"};
 	width: 100%;
-	min-height: 92vh;
+	min-height: 95vh;
 	display: grid;
 	align-items: baseline;
 	grid-template-rows: 1fr auto;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const CustomNavbar = styled.ul`
 	width: 100%;
-	height: 8vh;
+	height: 65px;
 	padding: 0 5%;
 	background-color: #fafafa;
 	background-image: linear-gradient(to bottom, #fff5c3, #fff77e);
@@ -91,7 +91,7 @@ const PartDropDown = styled.ul`
 
 const Child = styled.li`
 	transition: all .4s linear;
-	font-size: ${props => (props.hasIcon ? 3 : 2)}vh;
+	font-size: ${props => (props.hasIcon ? "3vh" : "16px")};
 	margin: 0 10px;
 	font-weight: 500;
 	white-space: nowrap;
@@ -112,12 +112,13 @@ const Child = styled.li`
 			font-weight: normal;
 			text-transform: none;
 			background-repeat: repeat-x;
-			padding: 2vh 1.2vw;
+			width: 98px;
+			height: 50px;
 			text-align: center;
 			cursor: pointer;
 			border: 0;
 			border-radius: 4px;
-			font-size: 2vh;
+			font-size: 16px;
 			`};
 	background-color: ${props =>
 		props.isButton
@@ -140,8 +141,8 @@ const Child = styled.li`
 const Icon = styled.img`width: ${props => (props.full ? "100%" : "8vw")};`;
 
 const Avatar = styled.div`
-	height: ${props => props.width || "6vh"};
-	width: ${props => props.height || "6vh"};
+	height: ${props => props.width || "45px"};
+	width: ${props => props.height || "45px"};
 	border-radius: 5px;
 	overflow: hidden;
 	display: flex;

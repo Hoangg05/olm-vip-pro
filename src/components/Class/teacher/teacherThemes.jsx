@@ -50,14 +50,14 @@ function TeacherThemes({ history, customStyles }) {
 		() => {
 			if (all_data__tables) {
 				const data_can_update = all_data__tables.filter(
-					item => item.__date.__lock === false
+					item => item.__protection.__lock === false
 				);
 				if (data_can_update) {
 					data_can_update.forEach(async item => {
 						const end_time = item.__date.__open.__end;
 						if (end_time) {
 							if (_n_ >= end_time) {
-								item.__date.__lock = true;
+								item.__protection.__lock = true;
 								await updateDoc(
 									doc(fs, "class", item.__idHash),
 									{

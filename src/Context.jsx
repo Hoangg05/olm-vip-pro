@@ -1,4 +1,4 @@
-import React, { createContext, useState, useMemo, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import app from "./firebase/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
@@ -19,7 +19,9 @@ function Context({ children }) {
 	const fs = getFirestore(app);
 	const storage = getStorage(app);
 
-	// data
+	const [hideNav, isHideNav] = useState(false);
+
+	// !!! DATA !!! //
 
 	// user
 	const [[user_data_login, user_data_store], StoreDataUser] = useState([
@@ -30,11 +32,7 @@ function Context({ children }) {
 	// profile user data
 	const [id_user_config, ConfigDataUser] = useState(null);
 
-	// filter data table teacher
-	const [filter_data_tables, filterDataTables] = useState(null);
-
 	// class data
-
 	const [ClassData, setClassData] = useState(null);
 
 	// data table teacher
@@ -46,15 +44,13 @@ function Context({ children }) {
 	const [load, isLoad] = useState(true);
 
 	// logic
-	useMemo(
+	useEffect(
 		() => {
-			const Auth = !user_data_login
-				? onAuthStateChanged(auth, u => {
-						if (u) StoreDataUser([u, user_data_store]);
-						else StoreDataUser([null, null]);
-						isLoad(false);
-					})
-				: false;
+			const Auth = onAuthStateChanged(auth, u => {
+				if (u) StoreDataUser([u, user_data_store]);
+				else StoreDataUser([null, null]);
+				isLoad(false);
+			});
 			const Snapshot =
 				user_data_login && !user_data_store
 					? id_user_config && id_user_config !== "me"
@@ -67,7 +63,9 @@ function Context({ children }) {
 									StoreDataUser([user_data_login, d.data()]);
 							})
 					: false;
+			if (!user_data_login) StoreDataUser([null, null]);
 
+			
 			return () => {
 				Snapshot && Snapshot();
 				Auth && Auth();
@@ -77,89 +75,75 @@ function Context({ children }) {
 	);
 
 	// exam tables data
-	useEffect(
-		() => {
-			const q = filter_data_tables
-				? query(
-						collection(fs, filter_data_tables.path),
-						where(
-							filter_data_tables.callback,
-							filter_data_tables.type,
-							filter_data_tables.value
-						)
-					)
-				: null;
-			const Snapshot = q
-				? onSnapshot(q, doc => {
-						if (!doc) return;
-						const d = doc.docs.reduce((_, item) => {
-							if (item.data().all_data.length === 0) return _;
-							_.push(
-								...item
-									.data()
-									.all_data.reduce((arr, itemChild) => {
-										itemChild["__idHash"] = item.id;
-										arr.push(itemChild);
-										return arr;
-									}, [])
-							);
-							return _;
-						}, []);
-						const _d_f_ = d.filter(
-							item =>
-								user_data_store.role !== "student"
-									? item.__teacher.__id === user_data_login.uid
-									: item.__who_make.indexOf(
-											user_data_login.uid
-										) > -1
-						);
-
-						setDataTables([
-							doc.docs.reduce((arr, item) => {
-								const d = item.data();
-								arr.push({
-									__k: d.__k,
-									__name: d.__name,
-									__school: d.__school,
-									__type: d.__type,
-									__year: d.__year
-								});
+	const filterDataTables = async filter_data_tables => {
+		const q = await query(
+			collection(fs, filter_data_tables.path),
+			where(
+				filter_data_tables.callback,
+				filter_data_tables.type,
+				filter_data_tables.value
+			)
+		);
+		if (user_data_login && user_data_store) {
+			const Snapshot = await onSnapshot(q, doc => {
+				if (!doc) return;
+				const d = doc.docs.reduce((_, item) => {
+					if (
+						item.data().all_data &&
+						item.data().all_data.length > 0
+					) {
+						_.push(
+							...item.data().all_data.reduce((arr, itemChild) => {
+								itemChild["__idHash"] = item.id;
+								arr.push(itemChild);
 								return arr;
-							}, []),
-							_d_f_
-						]);
-						setClassData(
-							doc.docs.reduce((_, val) => {
-								const data = val.data();
-								if (data.__name) {
-									_.push({
-										[data.__name]: data.__students,
-										__name: data.__name,
-										__type: data.__type,
-										__school: data.__school,
-										__k: data.__k,
-										__year: data.__year,
-										__idHash: val.id
-									});
-								}
-								return _;
 							}, [])
 						);
-					})
-				: false;
-			return () => {
-				Snapshot && Snapshot();
-			};
-		},
-		[
-			__class__tables,
-			all_data__tables,
-			filter_data_tables,
-			fs,
-			user_data_login,
-			user_data_store
-		]
-	);
+					}
+					return _;
+				}, []);
+				const _d_f_ = d.filter(
+					item =>
+						user_data_store.role !== "student"
+							? item.__teacher.__id === user_data_login.uid
+							: item.__who_make.indexOf(user_data_login.uid) > -1
+				);
+
+				setDataTables([
+					doc.docs.reduce((arr, item) => {
+						const d = item.data();
+						arr.push({
+							__k: d.__k,
+							__name: d.__name,
+							__school: d.__school,
+							__type: d.__type,
+							__year: d.__year
+						});
+						return arr;
+					}, []),
+					_d_f_
+				]);
+				setClassData(
+					doc.docs.reduce((_, val) => {
+						const data = val.data();
+						if (data.__name) {
+							_.push({
+								[data.__name]: data.__students,
+								__name: data.__name,
+								__type: data.__type,
+								__school: data.__school,
+								__k: data.__k,
+								__year: data.__year,
+								__idHash: val.id
+							});
+						}
+						return _;
+					}, [])
+				);
+			});
+			if (ClassData) Snapshot();
+		}
+	};
 
 	return (
 		<HandleContext.Provider
@@ -174,7 +158,9 @@ function Context({ children }) {
 				__class__tables,
 				ConfigDataUser,
 				filterDataTables,
-				ClassData
+				ClassData,
+				hideNav,
+				isHideNav
 			}}>
 			{children}
 		</HandleContext.Provider>

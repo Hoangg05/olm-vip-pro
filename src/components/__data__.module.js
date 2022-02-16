@@ -45,12 +45,14 @@ const news = [
 ];
 
 const typeExam = [
-	{ value: 1, label: "Trắc nghiệm" },
-	{ value: 2, label: "Tự luận" },
-	{ value: 3, label: "Đề thông minh" },
-	{ value: 4, label: "Video" },
-	{ value: 5, label: "Ảnh" },
-	{ value: 6, label: "Trả lời nhanh" }
+	{ value: 1, label: "Trắc nghiệm ( hỗn hợp )" }
+	// { value: 1, label: "Trắc nghiệm" }
+	// { value: 2, label: "Tự luận" },
+	// { value: 3, label: "Đề thông minh" },
+	// { value: 4, label: "Video" },
+	// { value: 5, label: "Ảnh" },
+	// { value: 6, label: "Trả lời nhanh" },
+	// { value: 7, label: "Đề tự do" },
 ];
 
 export { lectures, news, typeExam, lecturesCreateExam };

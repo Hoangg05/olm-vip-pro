@@ -65,6 +65,11 @@ const Images = styled.img`
 	padding: 15px;
 `;
 
+const ButtonGroup = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
 const Button = styled.input`
 	border: none;
 	padding: 10px 20px;
@@ -81,4 +86,13 @@ const Button = styled.input`
 	}
 `;
 
-export { LoginForm, UserInput, Images, Input, Forgot, Button, InputGroup };
+export {
+	LoginForm,
+	UserInput,
+	Images,
+	Input,
+	Forgot,
+	ButtonGroup,
+	Button,
+	InputGroup
+};

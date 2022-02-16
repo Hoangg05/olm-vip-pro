@@ -70,6 +70,7 @@ const ChildColumn = styled.td`
 		`& svg {
 		margin: 0 15px;
 	}`};
+	${props => props.capitalize && "text-transform: capitalize;"};
 `;
 
 const Paginate = styled.tr`

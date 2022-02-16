@@ -27,7 +27,6 @@ function StudentThemes({ history, customStyles }) {
 		value: "Tất cả",
 		label: "Tất cả"
 	});
-	let _n_ = new Date().getTime();
 
 	useEffect(
 		() => {
@@ -45,14 +44,15 @@ function StudentThemes({ history, customStyles }) {
 		() => {
 			if (all_data__tables) {
 				const data_can_update = all_data__tables.filter(
-					item => item.__date.__lock === false
+					item => item.__protection.__lock === false
 				);
 				if (data_can_update) {
+					const _n_ = new Date().getTime();
 					data_can_update.forEach(async (item, index) => {
 						const end_time = item.__date.__open.__end;
 						if (end_time) {
 							if (_n_ >= end_time) {
-								item.__date.__lock = true;
+								item.__protection.__lock = true;
 								await updateDoc(
 									doc(fs, "class", item.__idHash),
 									{
@@ -68,7 +68,7 @@ function StudentThemes({ history, customStyles }) {
 				}
 			}
 		},
-		[_n_, all_data__tables, fs]
+		[all_data__tables, fs]
 	);
 
 	return (

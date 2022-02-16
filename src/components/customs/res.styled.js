@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { LoginForm } from "./login.styled";
 
 const RegisterForm = styled(LoginForm)`
-    	min-width: 900px;
-    	max-width: 900px;
+	min-width: 90vw;
+	max-width: 90vw;
 	margin: 50px auto;
 `;
 const CaptchaForm = styled.div`width: 100%;`;

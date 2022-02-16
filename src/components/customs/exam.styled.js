@@ -10,7 +10,6 @@ const ButtonTask = styled.li`
 	text-align: center;
 	vertical-align: middle;
 	cursor: pointer;
-	border-color: rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) rgba(0, 0, 0, .25);
 	border: 1px solid #ccc;
 	border-bottom-color: #b3b3b3;
 	border-radius: 4px;
@@ -23,35 +22,38 @@ const ButtonTask = styled.li`
 		`
 	margin: 10px;
 	`} ${props => {
-			if (props.type) {
-				switch (props.type) {
-					case "blue":
-						return `
+		if (props.type) {
+			switch (props.type) {
+				case "blue":
+					return `
 					background: linear-gradient(to bottom,#0088cc,#0044cc);
 					color: #fff;`;
-					case "red":
-						return `
+				case "red":
+					return `
 					background: linear-gradient(to bottom,#ff6646,#eb0000);
 					color: #fff;`;
-					case "green":
-						return `
+				case "green":
+					return `
 					background: linear-gradient(to bottom,#67e32a,#44b20f);
 					color: #fff;`;
-					default:
-						return false;
-				}
-			} else {
-				return "background: linear-gradient(to bottom, #ffffff, #e6e6e6);";
+				default:
+					return false;
 			}
-		}};
+		} else {
+			return "background: linear-gradient(to bottom, #ffffff, #e6e6e6);";
+		}
+	}};
+
 	& p {
 		display: flex;
 		justify-content: center;
 		align-items: center;
+
 		& svg {
 			font-size: 24px;
 		}
 	}
+
 	${props => props.w100 && "width: 100%;"};
 `;
 
@@ -108,10 +110,10 @@ const CreateFormExam = styled(CreateCustomComponent)`
 		border-radius: 4px;
 		background-color: hsl(0, 0%, 100%);
 		border: 1px solid hsl(0, 0%, 80%);
-		min-height: 38px;
+		min-height: 45px;
 		position: relative;
 		padding: 2px 8px;
-		font-size: 18px;
+		font-size: 16px;
 		&[type="submit"]:hover {
 			background-color: #7289da;
 			color: #fff;
@@ -119,10 +121,16 @@ const CreateFormExam = styled(CreateCustomComponent)`
 	}
 `;
 
+const MakeExam = styled.div`
+	position: relative;
+	display: block;
+`;
+
 export {
 	ButtonTask,
 	DropdownTask,
 	PopUpParent,
 	CreateCustomComponent,
-	CreateFormExam
+	CreateFormExam,
+	MakeExam
 };

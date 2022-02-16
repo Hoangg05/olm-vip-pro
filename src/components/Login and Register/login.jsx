@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	Button,
+	ButtonGroup,
 	Forgot,
 	Images,
 	Input,
@@ -95,7 +96,7 @@ function LoginComponent() {
 						<BsQuestionCircleFill />
 						Quên mật khẩu
 					</Forgot>
-					<div>
+					<ButtonGroup>
 						<Button
 							background="#67e32a 0%, #44b20f 100%"
 							type="submit"
@@ -109,7 +110,7 @@ function LoginComponent() {
 							href="/register">
 							Đăng kí
 						</Button>
-					</div>
+					</ButtonGroup>
 				</UserInput>
 			</div>
 		</LoginForm>

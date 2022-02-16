@@ -44,3 +44,7 @@ Web gốc: [Click vào đây :3](https://olm.vn "https://olm.vn")
 -   **Làm xong cơ bản trang sửa bài kiểm tra**
 -   **Fix các case ẩn**
 -   **Mã hóa một số dữ liệu quan trọng**
+
+#### UPDATE [16/02/2022]:
+
+-   **Làm xong cơ bản trang làm bài kiểm tra (chọn đáp án, tự nộp bài nếu hết thời gian, không cho vào bài nếu không nằm trong danh sách)**

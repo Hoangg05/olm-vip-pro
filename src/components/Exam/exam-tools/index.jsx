@@ -206,6 +206,7 @@ const Button = styled.div`
 	margin: 20px auto;
 	width: fit-content;
 	color: #ddd;
+	cursor: pointer;
 `;
 
 export default memo(EditTools);

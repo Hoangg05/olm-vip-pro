@@ -1,6 +1,7 @@
 import React, { memo, useState } from "react";
 import styled from "styled-components";
 import Select from "react-select";
+import encode from "../../../encode";
 
 const customStyles = {
 	control: styles => ({
@@ -35,7 +36,16 @@ function POPUPComponent({ returnValue, turnON }) {
 	function handleCreate(e) {
 		e.preventDefault();
 		if ((answers && answers.length === 0) || answers.length < 2) return;
-		returnValue({ question, answers, type });
+		returnValue({
+			question,
+			answers: answers.reduce((array, answer) => {
+				answer["id"] = encode(answer, "hoangiutuyet");
+				array.push(answer);
+				return array;
+			}, []),
+			type,
+			id__quest: encode(question, "hoangiutuyet")
+		});
 		turnON(false);
 	}
 
@@ -50,7 +60,6 @@ function POPUPComponent({ returnValue, turnON }) {
 
 	function handleCorrectAnswer(index) {
 		const newAnswers = [...answers];
-
 		if (type === "once") {
 			newAnswers.forEach((answer, idx) => {
 				if (idx === index) {

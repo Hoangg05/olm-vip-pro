@@ -9,10 +9,10 @@ function ItemsStudent({ dataSlice, history }) {
 				dataSlice.map((item, index) => {
 					return (
 						<Column
-							no_hover={item.__date.__lock}
+							no_hover={item.__protection.__lock}
 							key={index}
 							onClick={() =>
-								!item.__date.__lock &&
+								!item.__protection.__lock &&
 								history(`/exam/make/${item.__id}`)}>
 							<ChildColumn>
 								{item.__title}
@@ -23,16 +23,16 @@ function ItemsStudent({ dataSlice, history }) {
 							<ChildColumn>
 								{item.__teacher.__name}
 							</ChildColumn>
-							<ChildColumn>
-								{moment(item.__date.__open.__start).fromNow()}
+							<ChildColumn capitalize>
+								{moment(item.__date.__open.__start).calendar()}
 							</ChildColumn>
-							<ChildColumn>
-								{item.__date.__lock
+							<ChildColumn capitalize>
+								{item.__protection.__lock
 									? "Đã hết giờ làm"
 									: item.__date.__open.__end
 										? moment(
 												new Date(item.__date.__open.__end)
-											).fromNow()
+											).calendar()
 										: "Không giới hạn"}
 							</ChildColumn>
 						</Column>

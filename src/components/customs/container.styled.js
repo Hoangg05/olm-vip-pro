@@ -61,9 +61,7 @@ const List = styled.ul`
 	padding: 10px;
 	&::-webkit-scrollbar {
 		width: 5px;
-		border-radius: 0;
 		&-thumb {
-			border-radius: 0;
 			background: #ddd;
 		}
 	}

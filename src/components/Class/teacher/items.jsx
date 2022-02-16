@@ -11,7 +11,7 @@ function ItemsTeacher({ history, dataSlice }) {
 					return (
 						<Column
 							c={4}
-							no_hover={item.__date.__lock}
+							no_hover={item.__protection.__lock}
 							key={index}
 							onClick={() => history(`/exam/edit/${item.__id}`)}>
 							<ChildColumn>
@@ -20,16 +20,16 @@ function ItemsTeacher({ history, dataSlice }) {
 							<ChildColumn>
 								{item.__s.label}
 							</ChildColumn>
-							<ChildColumn>
-								{moment(item.__date.__open.__start).fromNow()}
+							<ChildColumn capitalize>
+								{moment(item.__date.__open.__start).calendar()}
 							</ChildColumn>
-							<ChildColumn>
-								{item.__date.__lock
+							<ChildColumn capitalize>
+								{item.__protection.__lock
 									? "Đã khóa bài"
 									: item.__date.__open.__end
 										? moment(
 												item.__date.__open.__end
-											).fromNow()
+											).calendar()
 										: "Không giới hạn"}
 							</ChildColumn>
 						</Column>
