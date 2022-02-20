@@ -15,7 +15,7 @@ import styled from "styled-components";
 import { doc, updateDoc } from "firebase/firestore";
 import ClockComponent from "./clock";
 import { toast } from "react-toastify";
-import { disableDevtool } from "disable-devtool";
+import disableDevtool from "disable-devtool";
 
 function MakeExamComponent() {
 	const { idExam } = useParams();
