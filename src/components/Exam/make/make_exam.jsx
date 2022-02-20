@@ -54,13 +54,13 @@ function MakeExamComponent() {
 				document.addEventListener("ondblclick", e =>
 					e.preventDefault()
 				);
-				disableDevtool({
+				idExam && disableDevtool({
 					url:
 						"http://fdvn.vn/gian-lan-trong-thi-cu-bi-phat-nhu-the-nao/#:~:text=Hành%20vi%20gian%20lận%20trong,người%20học%20không%20được%20làm.&text=Phạt%20tiền%20từ%202.000.000,chấm%20thi%2C%20phục%20vụ%20thi."
 				});
 			}
 		},
-		[can_make]
+		[can_make, idExam]
 	);
 
 	useEffect(
