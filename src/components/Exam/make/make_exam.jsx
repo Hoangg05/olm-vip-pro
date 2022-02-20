@@ -14,6 +14,8 @@ import LoadingScreen from "../../../loading_screen";
 import styled from "styled-components";
 import { doc, updateDoc } from "firebase/firestore";
 import ClockComponent from "./clock";
+import { toast } from "react-toastify";
+import { disableDevtool } from "disable-devtool";
 
 function MakeExamComponent() {
 	const { idExam } = useParams();
@@ -30,37 +32,7 @@ function MakeExamComponent() {
 	const [can_make, isCanMake] = useState(false);
 	const [answers, setAnswers] = useState(null);
 	const [outTime, isOutTime] = useState(false);
-
-	useEffect(
-		() => {
-			if (can_make) {
-				document.addEventListener("oncontextmenu", e =>
-					e.preventDefault()
-				);
-				document.addEventListener("ondblclick", e =>
-					e.preventDefault()
-				);
-				document.addEventListener("visibilitychange", _event => {
-					if (document.visibilityState === "visible") {
-						console.log("tab is active");
-					} else {
-						console.log("tab is inactive");
-					}
-				});
-				document.onblur = () => {
-					console.log("Blur");
-				};
-				// disableDevtool({
-				// 	url:
-				// 		"http://fdvn.vn/gian-lan-trong-thi-cu-bi-phat-nhu-the-nao/#:~:text=Hành%20vi%20gian%20lận%20trong,người%20học%20không%20được%20làm.&text=Phạt%20tiền%20từ%202.000.000,chấm%20thi%2C%20phục%20vụ%20thi."
-				// });
-				document.onbeforeunload = function() {
-					return "Đừng có load lại trang nếu không muốn bị đánh dấu bài :)";
-				};
-			}
-		},
-		[can_make]
-	);
+	const [error, setError] = useState(0);
 
 	useEffect(
 		() => {
@@ -72,6 +44,23 @@ function MakeExamComponent() {
 			});
 		},
 		[filterDataTables, user_data_login]
+	);
+	useEffect(
+		() => {
+			if (can_make) {
+				document.addEventListener("oncontextmenu", e =>
+					e.preventDefault()
+				);
+				document.addEventListener("ondblclick", e =>
+					e.preventDefault()
+				);
+				disableDevtool({
+					url:
+						"http://fdvn.vn/gian-lan-trong-thi-cu-bi-phat-nhu-the-nao/#:~:text=Hành%20vi%20gian%20lận%20trong,người%20học%20không%20được%20làm.&text=Phạt%20tiền%20từ%202.000.000,chấm%20thi%2C%20phục%20vụ%20thi."
+				});
+			}
+		},
+		[can_make]
 	);
 
 	useEffect(
@@ -92,11 +81,13 @@ function MakeExamComponent() {
 					);
 					if (val) {
 						setAnswers(val.answers);
+						isCanMake(!val.submit);
+						setError(val.error);
 					}
 				}
 			}
 		},
-		[dataExam, user_data_login]
+		[dataExam, error, user_data_login]
 	);
 
 	useLayoutEffect(
@@ -181,17 +172,35 @@ function MakeExamComponent() {
 		saveAnswers(newValue);
 	}
 
-	function saveAnswers(answersNew, outTime = false) {
+	function saveAnswers(
+		answersNew,
+		outTime = false,
+		submitExam = false,
+		errorCount = null
+	) {
 		const _data = { ...dataExam };
 		const _old = [...all_data__tables];
 		if (outTime) _data.__protection.__lock = true;
 		const has = _data["__results"].find(
 			std => std.id_student === user_data_login.uid
 		);
+		if (answersNew)
+			answersNew.reduce((arr, item) => {
+				delete item.submit;
+				delete item.make;
+				delete item.error;
+				arr.push({
+					id_quest: item.id_quest,
+					id_answer: item.id_answer
+				});
+				return arr;
+			}, []);
 		if (has) {
 			_data["__results"].reduce((array, item) => {
 				if (item.id_student === user_data_login.uid) {
 					item.answers = answersNew;
+					item.submit = submitExam;
+					item.error = errorCount || error;
 				}
 				array.push(item);
 				return array;
@@ -199,8 +208,9 @@ function MakeExamComponent() {
 		} else {
 			_data["__results"].push({
 				id_student: user_data_login.uid,
-				answers: answersNew,
-				submit: false
+				answers: answersNew || [],
+				submit: submitExam,
+				error: errorCount || error
 			});
 		}
 		const newArr = _old.reduce((array, item) => {
@@ -221,6 +231,7 @@ function MakeExamComponent() {
 				});
 			}
 		});
+		if (submitExam) toast.success("Đã nộp bài thành công!");
 	}
 
 	const isChoice = (id1, id2, type) => {
@@ -331,16 +342,28 @@ function MakeExamComponent() {
 											</AnswerBlock>
 										);
 									})}
+									<SubmitExamButton
+										onClick={() =>
+											saveAnswers(answers, false, true)}>
+										Nộp bài
+									</SubmitExamButton>
+									{/* <ErrorCount>
+										Số lần vi phạm: {error}
+									</ErrorCount> */}
 								</Column>
 							</ExamBody>
 							{!dataExam.__protection.__lock &&
 								dataExam.__date.__open.__end &&
 								!outTime &&
-								<ClockComponent
-									currentTime={dataExam.__date.__open.__end}
-									isEnd={isOutTime}
-									end={outTime}
-								/>}
+								<Fragment>
+									<ClockComponent
+										currentTime={
+											dataExam.__date.__open.__end
+										}
+										isEnd={isOutTime}
+										end={outTime}
+									/>
+								</Fragment>}
 						</ExamStyles>}
 					{!dataExam && <E404 />}
 					{dataExam &&
@@ -352,7 +375,7 @@ function MakeExamComponent() {
 						</h1>}
 					{dataExam.__protection.__lock &&
 						<h1 style={{ textAlign: "center", margin: "auto" }}>
-							Bài đã bị khóa bài rồi :(
+							Bài đã bị khóa rồi :(
 						</h1>}
 				</Fragment>}
 			{!loading &&
@@ -371,7 +394,9 @@ function MakeExamComponent() {
 const ExamStyles = styled.div`
 	width: 90%;
 	height: 80vh;
-	max-height: 80vh;
+	display: grid;
+	grid-template-rows: auto 1fr;
+	overflow: hidden;
 	margin: 0 auto;
 	border: 1px solid #ddd;
 	border-radius: 10px;
@@ -398,6 +423,10 @@ const Column = styled.div`
 	border-top: 1px solid #ddd;
 	${props => props.border_left && `border-left: 1px solid #ddd;`};
 	padding: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	flex-direction: column;
 `;
 
 const QuestBlock = styled.div`
@@ -413,7 +442,6 @@ const QuestBlock = styled.div`
 `;
 
 const AnswerBlock = styled.div`
-	margin-bottom: 20px;
 	display: grid;
 	grid-template-columns: auto 1fr;
 	align-items: center;
@@ -445,5 +473,24 @@ const AnsButton = styled.button`
 		}
 	}};
 `;
+
+const SubmitExamButton = styled.button`
+	width: 100%;
+	height: 50px;
+	margin-top: 20px;
+	background: #14a76c;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
+`;
+
+// const ErrorCount = styled.p`
+// 	color: red;
+// 	font-weight: bold;
+// 	margin-top: 20px;
+// `;
 
 export default memo(MakeExamComponent);

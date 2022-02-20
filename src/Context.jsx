@@ -65,7 +65,6 @@ function Context({ children }) {
 					: false;
 			if (!user_data_login) StoreDataUser([null, null]);
 
-			
 			return () => {
 				Snapshot && Snapshot();
 				Auth && Auth();
